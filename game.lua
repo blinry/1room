@@ -15,12 +15,12 @@ function parseRoom(filename)
     room.vertical = {}
     room.name = string.match(string.match(filename, "[^/]+.txt"), "[^/.]+")
 
-    for i = 1,100 do
+    for i = 1,101 do
         room.floor[i] = {}
         room.horizontal[i] = {}
         room.vertical[i] = {}
 
-        for j = 1,100 do
+        for j = 1,101 do
             room.floor[i][j] = "empty"
             room.horizontal[i][j] = "empty"
             room.vertical[i][j] = "empty"
