@@ -213,10 +213,10 @@ function neighborybility(posX, posY)
         local bla3 = "false"
         if room.vertical[posX][posY] == "window" then bla2 = "true" end
         if not (room.vertical[posX][posY] == "window") then bla3 = "true" end
-        nopeText = "neee "..bla.." "..bla2.." "..bla3..""
+        --nopeText = "neee "..bla.." "..bla2.." "..bla3..""
         
         if accessible(posX-1, posY) and room.vertical[posX][posY] ~= "window" and room.vertical[posX][posY] ~= "wall" then
-            nopeTest = "WOOT"
+            --nopeTest = "WOOT"
             table.insert(accessX, posX-1)
             table.insert(accessY, posY)
         end
@@ -403,7 +403,7 @@ function allowed(object)
     if object.what == "armchair" then
         if not (object.r == 1 and isInTable(allVisibleX, allVisibleY, ox+1, oy)
                 or object.r == 2 and isInTable(allVisibleX, allVisibleY, ox, oy+1)
-                or object.r == 3 and isInTabke(allVisibleX, allVisibleY, ox-1, oy)
+                or object.r == 3 and isInTable(allVisibleX, allVisibleY, ox-1, oy)
                 or object.r == 0 and isInTable(allVisibleX, allVisibleY, ox, oy-1)) then
                 table.insert(object.errorStr,"An armchair needs to be accessible from the front.")
             return false
@@ -413,7 +413,7 @@ function allowed(object)
         if not (object.r == 0 and (isInTable(allVisibleX, allVisibleY, ox, oy-1) or isInTable(allVisibleX, allVisibleY, ox+1, oy-1))
                 or object.r == 1 and (isInTable(allVisibleX, allVisibleY, ox+1, oy) or isInTable(allVisibleX, allVisibleY, ox+1, oy+1))
                 or object.r == 2 and (isInTable(allVisibleX, allVisibleY, ox, oy+1) or isInTable(allVisibleX, allVisibleY, ox-1, oy+1))
-                or object.r == 3 and (isInTable(allVisibleX, allVisibleY, ox-1, oy) and isInTable(allVisibleX, allVisibleY, ox-1, oy-1))) then
+                or object.r == 3 and (isInTable(allVisibleX, allVisibleY, ox-1, oy) or isInTable(allVisibleX, allVisibleY, ox-1, oy-1))) then
                 table.insert(object.errorStr,"A "..object.what.."'s front needs to be accessible.")
             return false
         end
