@@ -132,21 +132,21 @@ function drawObject(object)
     love.graphics.push()
     love.graphics.translate(tilesize*(x+0.5), tilesize*(y+0.5))
     love.graphics.rotate(r/2*math.pi)
+
+    if object.dirty then
+        love.graphics.setColor(255, 0, 0)
+    else
+        love.graphics.setColor(255, 255, 255)
+    end
+
     if what == "plant" then
-        --love.graphics.setColor(50, 200, 50)
-        --love.graphics.circle("fill", 0, 0, tilesize/2)
-        if object.dirty then
-            love.graphics.setColor(255, 0, 0)
-        else
-            love.graphics.setColor(255, 255, 255)
-        end
         love.graphics.draw(images.plant, -tilesize/2, -tilesize/2, 0)
+    elseif what == "armchair" then
+        love.graphics.draw(images.armchair, -tilesize/2, -tilesize/2, 0)
     elseif what == "shelf" then
-        love.graphics.setColor(50, 50, 50)
-        love.graphics.rectangle("fill", -tilesize/2+tilesize/10, -tilesize/2+tilesize/10, tilesize*2-2*tilesize/10, tilesize-2*tilesize/10)
+        love.graphics.draw(images.bookshelf, -tilesize/2, tilesize/2, -math.pi/2)
     elseif what == "bed" then
-        love.graphics.setColor(50, 50, 50)
-        love.graphics.rectangle("fill", -tilesize/2+tilesize/10, -tilesize/2+tilesize/10, tilesize*2-2*tilesize/10, tilesize*2-2*tilesize/10)
+        love.graphics.draw(images.bed, -tilesize/2, 3*tilesize/2, -math.pi/2)
     else
         unknownObjectType()
     end
@@ -159,7 +159,7 @@ function occupies(object, x, y)
     local oy = object.y
     local r = object.r
 
-    if what == "plant" then
+    if what == "plant" or what == "armchair" then
         return ox == x and oy == y
     elseif what == "shelf" then
         return (x == ox and y == oy) or
