@@ -78,6 +78,7 @@ end
 function loadRoom(i)
     room = rooms[i]
     objects = room.objects
+    checkRules()
 end
 
 function drawRoom(room)
@@ -157,6 +158,30 @@ function drawObject(object)
     love.graphics.pop()
 end
 
+function checkRules()
+    for i=1,#objects do
+        objects[i].dirty = not allowed(objects[i])
+    end
+
+    for x = 1,100 do
+        for y = 1,100 do
+            what = occupied(x,y)
+            if what then
+                if (#what > 1 and room.floor[x][y] == "floor") then
+                    for i=1,#what do
+                        what[i].dirty = true
+                    end
+                else
+                    if room.floor[x][y] == "empty" then
+                        what[1].dirty = true
+                    end
+                    -- TODO: degenerate walls
+                end
+            end
+        end
+    end
+end
+
 function occupies(object, x, y)
     local what = object.what
     local ox = round(object.x)
@@ -187,12 +212,32 @@ function occupies(object, x, y)
 end
 
 function allowed(object)
-    if what == "plant" then
-        return true
-    elseif what == "shelf" then
+    local ox = round(object.x)
+    local oy = round(object.y)
+
+    if object.what == "armchair" then
+        if object.r == 0 then
+            return accessible(ox+1, oy)
+        elseif object.r == 1 then
+            return accessible(ox, oy+1)
+        elseif object.r == 2 then
+            return accessible(ox-1, oy)
+        elseif object.r == 3 then
+            return accessible(ox, oy-1)
+        end
+    elseif object.what == "couch" then
+        if object.r == 0 then
+            return accessible(ox, oy-1) and accessible(ox+1, oy-1)
+        elseif object.r == 1 then
+            return accessible(ox+1, oy) and accessible(ox+1, oy+1)
+        elseif object.r == 2 then
+            return accessible(ox, oy+1) and accessible(ox-1, oy+1)
+        elseif object.r == 3 then
+            return accessible(ox-1, oy) and accessible(ox-1, oy-1)
+        end
+    else
         return true
     end
-    return true
 end
 
 function occupied(x, y)
@@ -207,4 +252,8 @@ function occupied(x, y)
     else
         return false
     end
+end
+
+function accessible(x, y)
+    return x > 0 and y > 0 and room.floor[x][y] == "floor" and not occupied(x,y)
 end

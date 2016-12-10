@@ -73,6 +73,8 @@ function love.mousepressed(x, y, button, touch)
             end
         end
     end
+
+    checkRules()
 end
 
 function love.mousereleased(x, y, button, touch)
@@ -83,6 +85,8 @@ function love.mousereleased(x, y, button, touch)
             holding = nil
         end
     end
+
+    checkRules()
 end
 
 function love.mousemoved(x, y, dx, dy, touch)
@@ -91,27 +95,7 @@ function love.mousemoved(x, y, dx, dy, touch)
         holding.y = y/scale/tilesize-0.5
     end
 
-    for i=1,#objects do
-        objects[i].dirty = false
-    end
-
-    for x = 1,100 do
-        for y = 1,100 do
-            what = occupied(x,y)
-            if what then
-                if (#what > 1 and room.floor[x][y] == "floor") then
-                    for i=1,#what do
-                        what[i].dirty = true
-                    end
-                else
-                    if room.floor[x][y] == "empty" then
-                        what[1].dirty = true
-                    end
-                    -- TODO: degenerate walls
-                end
-            end
-        end
-    end
+    checkRules()
 end
 
 function love.draw()
