@@ -323,7 +323,8 @@ function occupied(x, y)
 end
 
 function accessible(x, y)
-    return x > 0 and y > 0 and room.floor[x][y] == "floor" and not occupied(x,y)
+    o = occupied(x,y)
+    return x > 0 and y > 0 and room.floor[x][y] == "floor" and (not o or #o == 0)
 end
 
 function nope(text)
