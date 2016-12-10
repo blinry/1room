@@ -292,6 +292,9 @@ function allowed(object)
             ok = true
           end
         end
+        if ~= ok then
+            nope("A "..object.what.." needs to be in front or next to a couch.")
+        end
         return ok
     elseif object.what == "bed" then
         if not ( object.r == 0 and (accessible(ox, oy-1) or accessible(ox+1, oy-1) or accessible(ox, oy+2) or accessible(ox+1, oy+2))
