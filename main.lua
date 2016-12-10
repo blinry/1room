@@ -97,12 +97,17 @@ function love.mousemoved(x, y, dx, dy, touch)
 
     for x = 1,100 do
         for y = 1,100 do
-            if room.floor[x][y] == "floor" then
-                what = occupied(x,y)
-                if what and #what > 1 then
+            what = occupied(x,y)
+            if what then
+                if (#what > 1 and room.floor[x][y] == "floor") then
                     for i=1,#what do
                         what[i].dirty = true
                     end
+                else
+                    if room.floor[x][y] == "empty" then
+                        what[1].dirty = true
+                    end
+                    -- TODO: degenerate walls
                 end
             end
         end

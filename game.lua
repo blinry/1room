@@ -68,7 +68,7 @@ function parseRoom(filename)
 
         for j = 1, tonumber(amount) do
             table.insert(room.objects, {what = what, x = i, y = 9, r = 1})
-            i = i+1
+            i = i+2
         end
     end
 
@@ -85,7 +85,7 @@ function drawRoom(room)
         for y = 1,100 do
             if room.floor[x][y] == "floor" then
                 love.graphics.setColor(255, 255, 255)
-                love.graphics.draw(images.parquet, tilesize*x, tilesize*(y+1), -math.pi/2)
+                love.graphics.draw(images.parquet, tilesize*x, tilesize*y, 0)
             end
 
             local top = room.horizontal[x][y]
@@ -147,6 +147,8 @@ function drawObject(object)
         love.graphics.draw(images.bookshelf, -tilesize/2, tilesize/2, -math.pi/2)
     elseif what == "couch" then
         love.graphics.draw(images.couch, -tilesize/2, tilesize/2, -math.pi/2)
+    elseif what == "desk" then
+        love.graphics.draw(images.desk, -tilesize/2, tilesize/2, -math.pi/2)
     elseif what == "bed" then
         love.graphics.draw(images.bed, -tilesize/2, 3*tilesize/2, -math.pi/2)
     else
@@ -163,7 +165,7 @@ function occupies(object, x, y)
 
     if what == "plant" or what == "armchair" then
         return ox == x and oy == y
-    elseif what == "shelf" or what == "couch" then
+    elseif what == "shelf" or what == "couch" or what == "desk" then
         return (x == ox and y == oy) or
             (r == 0 and x == ox+1 and y == oy) or
             (r == 1 and x == ox and y == oy+1) or
