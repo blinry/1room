@@ -145,6 +145,8 @@ function drawObject(object)
         love.graphics.draw(images.armchair, -tilesize/2, -tilesize/2, 0)
     elseif what == "shelf" then
         love.graphics.draw(images.bookshelf, -tilesize/2, tilesize/2, -math.pi/2)
+    elseif what == "couch" then
+        love.graphics.draw(images.couch, -tilesize/2, tilesize/2, -math.pi/2)
     elseif what == "bed" then
         love.graphics.draw(images.bed, -tilesize/2, 3*tilesize/2, -math.pi/2)
     else
@@ -161,7 +163,7 @@ function occupies(object, x, y)
 
     if what == "plant" or what == "armchair" then
         return ox == x and oy == y
-    elseif what == "shelf" then
+    elseif what == "shelf" or what == "couch" then
         return (x == ox and y == oy) or
             (r == 0 and x == ox+1 and y == oy) or
             (r == 1 and x == ox and y == oy+1) or

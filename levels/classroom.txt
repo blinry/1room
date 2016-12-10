@@ -16,3 +16,4 @@
 ---
 10 shelf
 1 armchair
+1 couch
