@@ -83,6 +83,17 @@ function love.mousereleased(x, y, button, touch)
             holding = nil
         end
     end
+end
+
+function love.mousemoved(x, y, dx, dy, touch)
+    if holding then
+        holding.x = x/scale/tilesize-0.5
+        holding.y = y/scale/tilesize-0.5
+    end
+
+    for i=1,#objects do
+        objects[i].dirty = false
+    end
 
     for x = 1,100 do
         for y = 1,100 do
@@ -95,13 +106,6 @@ function love.mousereleased(x, y, button, touch)
                 end
             end
         end
-    end
-end
-
-function love.mousemoved(x, y, dx, dy, touch)
-    if holding then
-        holding.x = x/scale/tilesize-0.5
-        holding.y = y/scale/tilesize-0.5
     end
 end
 

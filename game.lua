@@ -157,8 +157,8 @@ end
 
 function occupies(object, x, y)
     local what = object.what
-    local ox = object.x
-    local oy = object.y
+    local ox = round(object.x)
+    local oy = round(object.y)
     local r = object.r
 
     if what == "plant" or what == "armchair" then
