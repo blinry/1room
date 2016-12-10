@@ -60,16 +60,16 @@ function love.mousepressed(x, y, button, touch)
     if button == 1 then
         what = occupied(tx, ty)
         if what then
-            holding = what
+            holding = what[1]
         end
     end
     if button == 2 then
         if holding then
-            what.r = (what.r + 1) % 4
+            holding.r = (holding.r + 1) % 4
         else
             what = occupied(tx, ty)
             if what then
-                what.r = (what.r + 1) % 4
+                what[1].r = (what[1].r + 1) % 4
             end
         end
     end
@@ -81,6 +81,19 @@ function love.mousereleased(x, y, button, touch)
             holding.x = round(holding.x)
             holding.y = round(holding.y)
             holding = nil
+        end
+    end
+
+    for x = 1,100 do
+        for y = 1,100 do
+            if room.floor[x][y] == "floor" then
+                what = occupied(x,y)
+                if what and #what > 1 then
+                    for i=1,#what do
+                        what[i].dirty = true
+                    end
+                end
+            end
         end
     end
 end

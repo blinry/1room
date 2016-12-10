@@ -133,8 +133,14 @@ function drawObject(object)
     love.graphics.translate(tilesize*(x+0.5), tilesize*(y+0.5))
     love.graphics.rotate(r/2*math.pi)
     if what == "plant" then
-        love.graphics.setColor(50, 200, 50)
-        love.graphics.circle("fill", 0, 0, tilesize/2)
+        --love.graphics.setColor(50, 200, 50)
+        --love.graphics.circle("fill", 0, 0, tilesize/2)
+        if object.dirty then
+            love.graphics.setColor(255, 0, 0)
+        else
+            love.graphics.setColor(255, 255, 255)
+        end
+        love.graphics.draw(images.plant, -tilesize/2, -tilesize/2, 0)
     elseif what == "shelf" then
         love.graphics.setColor(50, 50, 50)
         love.graphics.rectangle("fill", -tilesize/2+tilesize/10, -tilesize/2+tilesize/10, tilesize*2-2*tilesize/10, tilesize-2*tilesize/10)
@@ -176,11 +182,25 @@ function occupies(object, x, y)
     end
 end
 
+function allowed(object)
+    if what == "plant" then
+        return true
+    elseif what == "shelf" then
+        return true
+    end
+    return true
+end
+
 function occupied(x, y)
+    o = {}
     for i = 1, #objects do
         if occupies(objects[i], x, y) then
-            return objects[i]
+            table.insert(o, objects[i])
         end
     end
-    return false
+    if #o > 0 then
+        return o
+    else
+        return false
+    end
 end
