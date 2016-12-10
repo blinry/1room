@@ -27,3 +27,4 @@
 1 couch
 3 plant
 2 desk
+1 bed

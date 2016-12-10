@@ -105,10 +105,8 @@ function drawRoom()
             love.graphics.setColor(255, 255, 255)
             local top = room.horizontal[x][y]
             if top == "wall" then
-                --love.graphics.line(tilesize*x, tilesize*y, tilesize*x+tilesize, tilesize*y)
                 love.graphics.draw(images.wall, tilesize*x, tilesize*y+1, -math.pi/2)
             elseif top == "window" then
-                --love.graphics.line(tilesize*x, tilesize*y, tilesize*x+tilesize, tilesize*y)
                 love.graphics.draw(images.window, tilesize*x, tilesize*y+1, -math.pi/2)
             elseif top == "door_top" then
                 love.graphics.setColor(255, 0, 0)
@@ -125,10 +123,8 @@ function drawRoom()
             love.graphics.setColor(255, 255, 255)
             local left = room.vertical[x][y]
             if left == "wall" then
-                --love.graphics.line(tilesize*x, tilesize*y, tilesize*x, tilesize*y+tilesize)
                 love.graphics.draw(images.wall, tilesize*x-1, tilesize*y, 0)
             elseif left == "window" then
-                --love.graphics.line(tilesize*x, tilesize*y, tilesize*x, tilesize*y+tilesize)
                 love.graphics.draw(images.window, tilesize*x-1, tilesize*y, 0)
             elseif left == "door_right" then
                 love.graphics.setColor(255, 0, 0)
@@ -179,9 +175,9 @@ function drawObject(object)
     elseif what == "officechair" then
         love.graphics.draw(images.officechair, -tilesize/2, tilesize/2, -math.pi/2)
     elseif what == "table" then
-        love.graphics.draw(images.couchtable, -tilesize/2, tilesize/2, 0)
+        love.graphics.draw(images.couchtable, -tilesize/2, tilesize/2, -math.pi/2)
     elseif what == "shelf" then
-        love.graphics.draw(images.bookshelf, -tilesize/2, tilesize/2, -math.pi/2)
+        love.graphics.draw(images.bookshelf, 3*tilesize/2, -tilesize/2, math.pi/2)
     elseif what == "couch" then
         love.graphics.draw(images.couch, -tilesize/2, tilesize/2, -math.pi/2)
     elseif what == "desk" then
@@ -339,6 +335,14 @@ function checkRules()
                         nope("All doors need to be accessible.")
                     end
                 end
+                if (windowypied(x,y)) then
+                    for i=1,#what do
+                        if what[i].what == "shelf" then
+                            what[i].dirty = true
+                            nope("Shelves must not block windows.")
+                        end
+                    end
+                end
                 if (#what > 1 and room.floor[x][y] == "floor") then
                     for i=1,#what do
                         what[i].dirty = true
@@ -440,6 +444,9 @@ function allowed(object)
             ok = true
           end
         end
+        if not ok then
+            nope("A "..object.what.." needs to be in front or next to a couch.")
+        end
         return ok
     elseif object.what == "bed" then
         if not ( object.r == 0 and (isInTable(allVisibleX, allVisibleY, ox, oy-1) or isInTable(allVisibleX, allVisibleY, ox+1, oy-1) or isInTable(allVisibleX, allVisibleY, ox, oy+2) or isInTable(allVisibleX, allVisibleY, ox+1, oy+2))
@@ -455,6 +462,13 @@ end
 
 function doorypied(x, y)
   if room.horizontal[x][y] == "door_bottom" or room.horizontal[x][y+1] == "door_top" or room.vertical[x][y] == "door_right" or room.vertical[x+1][y] == "door_left" then
+    return true
+  end
+  return false
+end
+
+function windowypied(x, y)
+  if room.horizontal[x][y] == "window" or room.horizontal[x][y+1] == "window" or room.vertical[x][y] == "window" or room.vertical[x+1][y] == "window" then
     return true
   end
   return false
