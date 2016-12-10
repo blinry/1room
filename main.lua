@@ -20,7 +20,7 @@ function love.load()
         table.insert(rooms, parseRoom("levels/"..filename))
     end
 
-    currentRoom = 3
+    currentRoom = 1
     loadRoom(currentRoom)
 
     holding = nil
@@ -45,10 +45,10 @@ function love.keypressed(key)
     elseif key == "4" then
         setScale(8)
     elseif key == "left" then
-        currentRoom = 1 + (currentRoom-1) % #rooms
+        currentRoom = 1 + (((currentRoom-2)) % #rooms)
         loadRoom(currentRoom)
     elseif key == "right" then
-        currentRoom = 1 + (currentRoom+1) % #rooms
+        currentRoom = 1 + (((currentRoom+0)) % #rooms)
         loadRoom(currentRoom)
     end
 end

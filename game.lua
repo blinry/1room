@@ -56,7 +56,7 @@ function parseRoom(filename)
     end
 
     room.objects = {}
-    local i = 1
+    local i = 2
     while true do
         local line = f:read()
 
@@ -138,6 +138,9 @@ function drawObject(object)
     elseif what == "shelf" then
         love.graphics.setColor(50, 50, 50)
         love.graphics.rectangle("fill", -tilesize/2+tilesize/10, -tilesize/2+tilesize/10, tilesize*2-2*tilesize/10, tilesize-2*tilesize/10)
+    elseif what == "bed" then
+        love.graphics.setColor(50, 50, 50)
+        love.graphics.rectangle("fill", -tilesize/2+tilesize/10, -tilesize/2+tilesize/10, tilesize*2-2*tilesize/10, tilesize*2-2*tilesize/10)
     else
         unknownObjectType()
     end
@@ -158,6 +161,16 @@ function occupies(object, x, y)
             (r == 1 and x == ox and y == oy+1) or
             (r == 2 and x == ox-1 and y == oy) or
             (r == 3 and x == ox and y == oy-1)
+    elseif what == "bed" then
+        if r == 0 then
+            return x >= ox and x <= ox+1 and y >= oy and y <= oy+1
+        elseif r == 1 then
+            return x >= ox-1 and x <= ox and y >= oy and y <= oy+1
+        elseif r == 2 then
+            return x >= ox-1 and x <= ox and y >= oy-1 and y <= oy
+        elseif r == 3 then
+            return x >= ox and x <= ox+1 and y >= oy-1 and y <= oy
+        end
     else
         unknownObjectType()
     end
