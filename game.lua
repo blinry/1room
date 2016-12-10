@@ -163,13 +163,13 @@ function drawObject(object)
     end
 
     if what == "plant" then
-        love.graphics.draw(images.plant, -tilesize/2, -tilesize/2, 0)
+        love.graphics.draw(images.plant, -tilesize/2, tilesize/2, -math.pi/2)
     elseif what == "armchair" then
-        love.graphics.draw(images.armchair, -tilesize/2, -tilesize/2, 0)
+        love.graphics.draw(images.armchair, -tilesize/2, tilesize/2, -math.pi/2)
     elseif what == "officechair" then
-        love.graphics.draw(images.officechair, -tilesize/2, -tilesize/2, 0)
+        love.graphics.draw(images.officechair, -tilesize/2, tilesize/2, -math.pi/2)
     elseif what == "table" then
-        love.graphics.draw(images.couchtable, -tilesize/2, -tilesize/2, 0)
+        love.graphics.draw(images.couchtable, -tilesize/2, tilesize/2, 0)
     elseif what == "shelf" then
         love.graphics.draw(images.bookshelf, -tilesize/2, tilesize/2, -math.pi/2)
     elseif what == "couch" then
