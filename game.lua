@@ -195,6 +195,12 @@ function checkRules()
         for y = 1,99 do
             what = occupied(x,y)
             if what then
+                if (doorypied(x,y)) then
+                    for i=1,#what do
+                        what[i].dirty = true
+                        nope("All doors need to be accessible.")
+                    end
+                end
                 if (#what > 1 and room.floor[x][y] == "floor") then
                     for i=1,#what do
                         what[i].dirty = true
@@ -305,6 +311,13 @@ function allowed(object)
     return true
 end
 
+function doorypied(x, y)
+  if room.horizontal[x][y] == "door_bottom" or room.horizontal[x][y+1] == "door_top" or room.vertical[x][y] == "door_right" or room.vertical[x+1][y] == "door_left" then
+    return true
+  end
+  return false
+end
+
 function occupied(x, y)
     o = {}
     for i = 1, #objects do
@@ -315,16 +328,13 @@ function occupied(x, y)
     if #o > 0 then
         return o
     else
-        if room.horizontal[x][y] == "door_bottom" or room.horizontal[x][y+1] == "door_top" or room.vertical[x][y] == "door_right" or room.vertical[x+1][y] == "door_left" then
-          return o
-        end
         return false
     end
 end
 
 function accessible(x, y)
     o = occupied(x,y)
-    return x > 0 and y > 0 and room.floor[x][y] == "floor" and (not o or #o == 0)
+    return x > 0 and y > 0 and room.floor[x][y] == "floor" and not o
 end
 
 function nope(text)
