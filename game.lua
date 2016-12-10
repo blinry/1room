@@ -163,13 +163,13 @@ function drawObject(object)
     end
 
     if what == "plant" then
-        love.graphics.draw(images.plant, -tilesize/2, -tilesize/2, 0)
+        love.graphics.draw(images.plant, -tilesize/2, tilesize/2, -math.pi/2)
     elseif what == "armchair" then
-        love.graphics.draw(images.armchair, -tilesize/2, -tilesize/2, 0)
+        love.graphics.draw(images.armchair, -tilesize/2, tilesize/2, -math.pi/2)
     elseif what == "officechair" then
-        love.graphics.draw(images.officechair, -tilesize/2, -tilesize/2, 0)
+        love.graphics.draw(images.officechair, -tilesize/2, tilesize/2, -math.pi/2)
     elseif what == "table" then
-        love.graphics.draw(images.couchtable, -tilesize/2, -tilesize/2, 0)
+        love.graphics.draw(images.couchtable, -tilesize/2, tilesize/2, 0)
     elseif what == "shelf" then
         love.graphics.draw(images.bookshelf, -tilesize/2, tilesize/2, -math.pi/2)
     elseif what == "couch" then
@@ -195,6 +195,12 @@ function checkRules()
         for y = 1,99 do
             what = occupied(x,y)
             if what then
+                if (doorypied(x,y)) then
+                    for i=1,#what do
+                        what[i].dirty = true
+                        nope("All doors need to be accessible.")
+                    end
+                end
                 if (#what > 1 and room.floor[x][y] == "floor") then
                     for i=1,#what do
                         what[i].dirty = true
@@ -308,6 +314,13 @@ function allowed(object)
     return true
 end
 
+function doorypied(x, y)
+  if room.horizontal[x][y] == "door_bottom" or room.horizontal[x][y+1] == "door_top" or room.vertical[x][y] == "door_right" or room.vertical[x+1][y] == "door_left" then
+    return true
+  end
+  return false
+end
+
 function occupied(x, y)
     o = {}
     for i = 1, #objects do
@@ -318,16 +331,13 @@ function occupied(x, y)
     if #o > 0 then
         return o
     else
-        if room.horizontal[x][y] == "door_bottom" or room.horizontal[x][y+1] == "door_top" or room.vertical[x][y] == "door_right" or room.vertical[x+1][y] == "door_left" then
-          return o
-        end
         return false
     end
 end
 
 function accessible(x, y)
     o = occupied(x,y)
-    return x > 0 and y > 0 and room.floor[x][y] == "floor" and (not o or #o == 0)
+    return x > 0 and y > 0 and room.floor[x][y] == "floor" and not o
 end
 
 function nope(text)
