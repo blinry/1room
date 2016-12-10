@@ -270,6 +270,9 @@ end
 
 function occupied(x, y)
     o = {}
+    if room.horizontal[x][y] == "door_bottom" or room.horizontal[x][y+1] == "door_top" or room.vertical[1][2] == "door_right" then--or room.vertical[x+1][y] == "door_left" then
+    return o
+    end
     for i = 1, #objects do
         if occupies(objects[i], x, y) then
             table.insert(o, objects[i])
