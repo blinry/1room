@@ -19,8 +19,11 @@ function love.load()
 
     objects = {}
 
-    table.insert(objects, {what = "plant", x = 3, y = 3, r = 0})
-    table.insert(objects, {what = "shelf", x = 1, y = 2, r = 0})
+    table.insert(objects, {what = "plant", x = 6, y = 3, r = 0})
+    table.insert(objects, {what = "plant", x = 7, y = 3, r = 0})
+    table.insert(objects, {what = "shelf", x = 8, y = 2, r = 1})
+    table.insert(objects, {what = "shelf", x = 9, y = 2, r = 1})
+    table.insert(objects, {what = "shelf", x = 10, y = 2, r = 1})
 
     holding = nil
 end

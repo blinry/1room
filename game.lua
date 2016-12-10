@@ -110,7 +110,7 @@ function drawObject(object)
         love.graphics.circle("fill", 0, 0, tilesize/2)
     elseif what == "shelf" then
         love.graphics.setColor(50, 50, 50)
-        love.graphics.rectangle("fill", -tilesize/2, -tilesize/2, tilesize*2, tilesize)
+        love.graphics.rectangle("fill", -tilesize/2+tilesize/10, -tilesize/2+tilesize/10, tilesize*2-2*tilesize/10, tilesize-2*tilesize/10)
     else
         unknownObjectType()
     end
