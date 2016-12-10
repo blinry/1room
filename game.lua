@@ -59,7 +59,8 @@ function parseRoom(filename)
     end
 
     room.objects = {}
-    local i = 2
+    local x = 12
+    local y = 1
     while true do
         local line = f:read()
 
@@ -70,8 +71,13 @@ function parseRoom(filename)
         amount, what = string.match(line, "([0-9]+) (.+)")
 
         for j = 1, tonumber(amount) do
-            table.insert(room.objects, {what = what, x = i, y = 9, r = 1})
-            i = i+2
+            table.insert(room.objects, {what = what, x = x, y = y, r = 1})
+        end
+
+        x = x+2
+        if x > 18 then
+            x = 12
+            y = y+3
         end
     end
 
@@ -84,7 +90,7 @@ function loadRoom(i)
     checkRules()
 end
 
-function drawRoom(room)
+function drawRoom()
     for x = 1,100 do
         for y = 1,100 do
             if room.floor[x][y] == "floor" then
@@ -173,6 +179,8 @@ function drawObject(object)
 end
 
 function checkRules()
+    nopeText = ""
+
     for i=1,#objects do
         objects[i].dirty = not allowed(objects[i])
     end
@@ -184,10 +192,12 @@ function checkRules()
                 if (#what > 1 and room.floor[x][y] == "floor") then
                     for i=1,#what do
                         what[i].dirty = true
+                        nope("Objects must not overlap.")
                     end
                 else
                     if room.floor[x][y] == "empty" then
                         what[1].dirty = true
+                        nope("All objects must be inside of the room.")
                     end
                     -- TODO: degenerate walls
                 end
@@ -230,28 +240,32 @@ function allowed(object)
     local oy = round(object.y)
 
     if object.what == "armchair" then
-        if object.r == 0 then
-            return accessible(ox+1, oy)
-        elseif object.r == 1 then
-            return accessible(ox, oy+1)
-        elseif object.r == 2 then
-            return accessible(ox-1, oy)
-        elseif object.r == 3 then
-            return accessible(ox, oy-1)
+        if not (object.r == 0 and accessible(ox+1, oy)
+                or object.r == 1 and accessible(ox, oy+1)
+                or object.r == 2 and accessible(ox-1, oy)
+                or object.r == 3 and accessible(ox, oy-1)) then
+            nope("An armchair needs to be accessible from the front.")
+            return false
         end
-    elseif object.what == "couch" then
-        if object.r == 0 then
-            return accessible(ox, oy-1) and accessible(ox+1, oy-1)
-        elseif object.r == 1 then
-            return accessible(ox+1, oy) and accessible(ox+1, oy+1)
-        elseif object.r == 2 then
-            return accessible(ox, oy+1) and accessible(ox-1, oy+1)
-        elseif object.r == 3 then
-            return accessible(ox-1, oy) and accessible(ox-1, oy-1)
+
+    elseif object.what == "couch" or object.what == "shelf" then
+        if not (object.r == 0 and accessible(ox, oy-1) and accessible(ox+1, oy-1)
+                or object.r == 1 and accessible(ox+1, oy) and accessible(ox+1, oy+1)
+                or object.r == 2 and accessible(ox, oy+1) and accessible(ox-1, oy+1)
+                or object.r == 3 and accessible(ox-1, oy) and accessible(ox-1, oy-1)) then
+            nope("A "..object.what.."'s complete front needs to be accessible.")
+            return false
         end
-    else
-        return true
+    elseif object.what == "bed" then
+        if not ( object.r == 0 and (accessible(ox, oy-1) or accessible(ox+1, oy-1) or accessible(ox, oy+2) or accessible(ox+1, oy+2))
+                 or object.r == 1 and (accessible(ox+1, oy) or accessible(ox+1, oy+1) or accessible(ox-2, oy) or accessible(ox-2, oy+1))
+                 or object.r == 2 and (accessible(ox, oy+1) or accessible(ox-1, oy+1) or accessible(ox, oy-2) or accessible(ox-1, oy-2))
+                 or object.r == 3 and (accessible(ox-1, oy) or accessible(ox-1, oy-1) or accessible(ox+2, oy) or accessible(ox+2, oy-1))) then
+            nope("A bed needs to be accessible from the side.")
+            return false
+        end
     end
+        return true
 end
 
 function occupied(x, y)
@@ -273,4 +287,8 @@ end
 
 function accessible(x, y)
     return x > 0 and y > 0 and room.floor[x][y] == "floor" and not occupied(x,y)
+end
+
+function nope(text)
+    nopeText = text
 end
