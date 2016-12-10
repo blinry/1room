@@ -1,142 +1,102 @@
 require "slam"
 vector = require "hump.vector"
 Timer = require "hump.timer"
-Camera = require "hump.camera"
 
--- convert HSL to RGB (input and output range: 0 - 255)
-function HSL(h, s, l, a)
-    if s<=0 then return l,l,l,a end
-    h, s, l = h/256*6, s/255, l/255
-    local c = (1-math.abs(2*l-1))*s
-    local x = (1-math.abs(h%2-1))*c
-    local m,r,g,b = (l-.5*c), 0,0,0
-    if h < 1     then r,g,b = c,x,0
-    elseif h < 2 then r,g,b = x,c,0
-    elseif h < 3 then r,g,b = 0,c,x
-    elseif h < 4 then r,g,b = 0,x,c
-    elseif h < 5 then r,g,b = x,0,c
-    else              r,g,b = c,0,x
-    end
+require "helpers"
+require "game"
 
-    return (r+m)*255,(g+m)*255,(b+m)*255,a
-end
-
--- take the values from tbl from first to last, with stepsize step
-function table.slice(tbl, first, last, step)
-    local sliced = {}
-
-    for i = first or 1, last or #tbl, step or 1 do
-        sliced[#sliced+1] = tbl[i]
-    end
-
-    return sliced
-end
-
--- linear interpolation between a and b, with t between 0 and 1
-function lerp(a, b, t)
-    return a + t*(b-a)
-end
-
--- return a value between 0 and 1, depending on where value is between min and
--- max, clamping if it's outside.
-function range(value, min, max)
-    if value < min then
-        return 0
-    elseif value > max then
-        return 1
-    else
-        return (value-min)/(max-min)
-    end
-end
-
-function worldCoords(camera, x1, y1, x2, y2, x3, y3, x4, y4)
-    a1, b1 = camera:worldCoords(x1, y1)
-    a2, b2 = camera:worldCoords(x2, y2)
-    a3, b3 = camera:worldCoords(x3, y3)
-    a4, b4 = camera:worldCoords(x4, y4)
-    return a1, b1, a2, b2, a3, b3, a4, b4
-end
-
-function cameraCoords(camera, x1, y1, x2, y2, x3, y3, x4, y4)
-    a1, b1 = camera:cameraCoords(x1, y1)
-    if x2 then
-        a2, b2 = camera:cameraCoords(x2, y2)
-    end
-    if x3 then
-        a3, b3 = camera:cameraCoords(x3, y3)
-    end
-    if x4 then
-        a4, b4 = camera:cameraCoords(x4, y4)
-    end
-    return a1, b1, a2, b2, a3, b3, a4, b4
-end
+scale = 4 -- how many screen pixels are the length of one game pixel?
+tilesize = 16 -- what is the length of a tile in game pixels?
 
 function love.load()
-    images = {}
-    for i,filename in pairs(love.filesystem.getDirectoryItems("images")) do
-        images[filename:sub(1,-5)] = love.graphics.newImage("images/"..filename)
-    end
+    boringLoad() -- see helpers.lua
 
-    sounds = {}
-    for i,filename in pairs(love.filesystem.getDirectoryItems("sounds")) do
-        sounds[filename:sub(1,-5)] = love.audio.newSource("sounds/"..filename, "static")
-    end
+    setScale(4)
 
-    music = {}
-    for i,filename in pairs(love.filesystem.getDirectoryItems("music")) do
-        music[filename:sub(1,-5)] = love.audio.newSource("music/"..filename)
-        music[filename:sub(1,-5)]:setLooping(true)
-    end
+    love.graphics.setFont(fonts.m5x7[16])
 
-    fonts = {}
-    for i,filename in pairs(love.filesystem.getDirectoryItems("fonts")) do
-        fonts[filename:sub(1,-5)] = {}
-        fonts[filename:sub(1,-5)][fontsize] = love.graphics.newFont("fonts/"..filename, fontsize)
-    end
+    room = loadRoom("levels/level1.txt")
 
-    love.physics.setMeter(100)
-    world = love.physics.newWorld(0, 0, true)
-    world:setCallbacks(beginContact)
+    objects = {}
 
-    camera = Camera(300, 300)
-    --camera.smoother = Camera.smooth.damped(3)
-    camera:zoom(1)
+    table.insert(objects, {what = "plant", x = 3, y = 3, r = 0})
+    table.insert(objects, {what = "shelf", x = 1, y = 2, r = 0})
 
-    --love.graphics.setFont(fonts.unkempt[fontsize])
-    love.graphics.setBackgroundColor(0, 0, 200)
+    holding = nil
 end
 
 function love.update(dt)
     Timer.update(dt)
-    world:update(dt)
 end
 
 function love.keypressed(key)
     if key == "escape" then
-        love.window.setFullscreen(false)
-        love.timer.sleep(0.1)
+        -- why did we need this again?
+        -- love.window.setFullscreen(false)
+        -- love.timer.sleep(0.1)
         love.event.quit()
+    elseif key == "1" then
+        setScale(1)
+    elseif key == "2" then
+        setScale(2)
+    elseif key == "3" then
+        setScale(4)
+    elseif key == "4" then
+        setScale(8)
+    elseif key == "5" then
+        setScale(16)
     end
 end
 
 function love.mousepressed(x, y, button, touch)
-    if button == 1 then
+    tx = math.floor(x/scale/tilesize)
+    ty = math.floor(y/scale/tilesize)
 
+    if button == 1 then
+        what = occupied(tx, ty)
+        if what then
+            holding = what
+        end
     end
     if button == 2 then
-
+        if holding then
+            what.r = (what.r + 1) % 4
+        else
+            what = occupied(tx, ty)
+            if what then
+                what.r = (what.r + 1) % 4
+            end
+        end
     end
 end
 
-function beginContact(a, b, coll)
+function love.mousereleased(x, y, button, touch)
+    if button == 1 then
+        if holding then
+            holding.x = round(holding.x)
+            holding.y = round(holding.y)
+            holding = nil
+        end
+    end
+end
 
+function love.mousemoved(x, y, dx, dy, touch)
+    if holding then
+        holding.x = x/scale/tilesize-0.5
+        holding.y = y/scale/tilesize-0.5
+    end
 end
 
 function love.draw()
-    -- draw world
-    camera:attach()
+    love.graphics.scale(scale, scale)
 
-    camera:detach()
+    drawRoom(room)
 
-    -- draw UI
+    for i = 1, #objects do
+        drawObject(objects[i])
+    end
+
+    drawDebug()
+
+    --love.graphics.print("Text!", 100, 0)
 end
