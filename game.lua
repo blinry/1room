@@ -292,7 +292,7 @@ function allowed(object)
             ok = true
           end
         end
-        if ~= ok then
+        if not ok then
             nope("A "..object.what.." needs to be in front or next to a couch.")
         end
         return ok
