@@ -260,8 +260,8 @@ function allowed(object)
         if not (object.r == 0 and (accessible(ox, oy-1) or accessible(ox+1, oy-1))
                 or object.r == 1 and (accessible(ox+1, oy) or accessible(ox+1, oy+1))
                 or object.r == 2 and (accessible(ox, oy+1) or accessible(ox-1, oy+1))
-                or object.r == 3 and (accessible(ox-1, oy) and accessible(ox-1, oy-1))) then
-            nope("A "..object.what.."'s complete front needs to be accessible.")
+                or object.r == 3 and (accessible(ox-1, oy) or accessible(ox-1, oy-1))) then
+            nope("A "..object.what.."'s front needs to be accessible.")
             return false
         end
     elseif object.what == "officechair" then
