@@ -84,8 +84,8 @@ function drawRoom(room)
     for x = 1,100 do
         for y = 1,100 do
             if room.floor[x][y] == "floor" then
-                love.graphics.setColor(100, 100, 100)
-                love.graphics.rectangle("fill", tilesize*x, tilesize*y, tilesize, tilesize)
+                love.graphics.setColor(255, 255, 255)
+                love.graphics.draw(images.parquet, tilesize*x, tilesize*(y+1), -math.pi/2)
             end
 
             local top = room.horizontal[x][y]
