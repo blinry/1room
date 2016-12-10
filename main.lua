@@ -109,7 +109,7 @@ function love.draw()
         drawObject(objects[i])
     end
 
-    drawDebug()
+    --drawDebug()
 
     love.graphics.setColor(255, 255, 255)
     love.graphics.print(room.name, 100, 0)
