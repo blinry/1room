@@ -1,4 +1,4 @@
-function loadRoom(filename)
+function parseRoom(filename)
     local legend = {}
     legend[" "] = "empty"
     legend["#"] = "wall"
@@ -10,6 +10,7 @@ function loadRoom(filename)
     room.floor = {}
     room.horizontal = {}
     room.vertical = {}
+    room.name = string.match(string.match(filename, "[^/]+.txt"), "[^/.]+")
 
     for i = 1,100 do
         room.floor[i] = {}
@@ -29,7 +30,11 @@ function loadRoom(filename)
     local lineNr = 1
     while true do
         local line = f:read()
-        if line == nil then break end
+        if line == nil then noObjectList() end
+
+        if line == "---" then
+            break
+        end
 
         if horizontal then
             for i = 2, #line, 2 do
@@ -50,7 +55,29 @@ function loadRoom(filename)
         lineNr = lineNr+1
     end
 
+    room.objects = {}
+    local i = 1
+    while true do
+        local line = f:read()
+
+        if line == nil then
+            break
+        end
+
+        amount, what = string.match(line, "([0-9]+) (.+)")
+
+        for j = 1, tonumber(amount) do
+            table.insert(room.objects, {what = what, x = i, y = 9, r = 1})
+            i = i+1
+        end
+    end
+
     return room
+end
+
+function loadRoom(i)
+    room = rooms[i]
+    objects = room.objects
 end
 
 function drawRoom(room)
@@ -106,7 +133,7 @@ function drawObject(object)
     love.graphics.translate(tilesize*(x+0.5), tilesize*(y+0.5))
     love.graphics.rotate(r/2*math.pi)
     if what == "plant" then
-        love.graphics.setColor(0, 200, 0)
+        love.graphics.setColor(50, 200, 50)
         love.graphics.circle("fill", 0, 0, tilesize/2)
     elseif what == "shelf" then
         love.graphics.setColor(50, 50, 50)

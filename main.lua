@@ -15,15 +15,13 @@ function love.load()
 
     love.graphics.setFont(fonts.m5x7[16])
 
-    room = loadRoom("levels/level1.txt")
+    rooms = {}
+    for i,filename in pairs(love.filesystem.getDirectoryItems("levels")) do
+        table.insert(rooms, parseRoom("levels/"..filename))
+    end
 
-    objects = {}
-
-    table.insert(objects, {what = "plant", x = 6, y = 3, r = 0})
-    table.insert(objects, {what = "plant", x = 7, y = 3, r = 0})
-    table.insert(objects, {what = "shelf", x = 8, y = 2, r = 1})
-    table.insert(objects, {what = "shelf", x = 9, y = 2, r = 1})
-    table.insert(objects, {what = "shelf", x = 10, y = 2, r = 1})
+    currentRoom = 3
+    loadRoom(currentRoom)
 
     holding = nil
 end
@@ -46,8 +44,12 @@ function love.keypressed(key)
         setScale(4)
     elseif key == "4" then
         setScale(8)
-    elseif key == "5" then
-        setScale(16)
+    elseif key == "left" then
+        currentRoom = 1 + (currentRoom-1) % #rooms
+        loadRoom(currentRoom)
+    elseif key == "right" then
+        currentRoom = 1 + (currentRoom+1) % #rooms
+        loadRoom(currentRoom)
     end
 end
 
@@ -101,5 +103,5 @@ function love.draw()
 
     drawDebug()
 
-    --love.graphics.print("Text!", 100, 0)
+    love.graphics.print(room.name, 100, 0)
 end
