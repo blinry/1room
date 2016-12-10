@@ -195,10 +195,12 @@ function checkRules()
                         nope("Objects must not overlap.")
                     end
                 else
-                    if room.floor[x][y] == "empty" then
-                        what[1].dirty = true
-                        nope("All objects must be inside of the room.")
-                    end
+                if room.floor[x][y] == "empty" then
+                  for i=1,#what do
+                    what[i].dirty = true
+                    nope("All objects must be inside of the room.")
+                  end
+                end
                     -- TODO: degenerate walls
                 end
             end
@@ -270,9 +272,6 @@ end
 
 function occupied(x, y)
     o = {}
-    if room.horizontal[x][y] == "door_bottom" or room.horizontal[x][y+1] == "door_top" or room.vertical[1][2] == "door_right" then--or room.vertical[x+1][y] == "door_left" then
-    return o
-    end
     for i = 1, #objects do
         if occupies(objects[i], x, y) then
             table.insert(o, objects[i])
@@ -281,6 +280,9 @@ function occupied(x, y)
     if #o > 0 then
         return o
     else
+        if room.horizontal[x][y] == "door_bottom" or room.horizontal[x][y+1] == "door_top" or room.vertical[x][y] == "door_right" or room.vertical[x+1][y] == "door_left" then
+          return o
+        end
         return false
     end
 end

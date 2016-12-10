@@ -69,7 +69,9 @@ function love.mousepressed(x, y, button, touch)
         else
             what = occupied(tx, ty)
             if what then
-                what[1].r = (what[1].r + 1) % 4
+                for i=1,#what do
+                  what[1].r = (what[1].r + 1) % 4
+                end
             end
         end
     end
