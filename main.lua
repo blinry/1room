@@ -101,7 +101,7 @@ end
 function love.draw()
     love.graphics.scale(scale, scale)
 
-    drawRoom(room)
+    drawRoom()
 
     for i = 1, #objects do
         drawObject(objects[i])
@@ -109,5 +109,9 @@ function love.draw()
 
     drawDebug()
 
+    love.graphics.setColor(255, 255, 255)
     love.graphics.print(room.name, 100, 0)
+
+    love.graphics.setColor(255, 0, 0)
+    love.graphics.print(nopeText, 10, 160)
 end
