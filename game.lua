@@ -449,10 +449,10 @@ function allowed(object)
         end
         return ok
     elseif object.what == "bed" then
-        if not ( object.r == 0 and (isInTable(allVisibleX, allVisibleY, ox, oy-1) or isInTable(allVisibleX, allVisibleY, ox+1, oy-1) or isInTable(allVisibleX, allVisibleY, ox, oy+2) or isInTable(allVisibleX, allVisibleY, ox+1, oy+2))
-                 or object.r == 1 and (isInTable(allVisibleX, allVisibleY, ox+1, oy) or isInTable(allVisibleX, allVisibleY, ox+1, oy+1) or isInTable(allVisibleX, allVisibleY, ox-2, oy) or isInTable(allVisibleX, allVisibleY, ox-2, oy+1))
-                 or object.r == 2 and (isInTable(allVisibleX, allVisibleY, ox, oy+1) or isInTable(allVisibleX, allVisibleY, ox-1, oy+1) or isInTable(allVisibleX, allVisibleY, ox, oy-2) or isInTable(allVisibleX, allVisibleY, ox-1, oy-2))
-                 or object.r == 3 and (isInTable(allVisibleX, allVisibleY, ox-1, oy) or isInTable(allVisibleX, allVisibleY, ox-1, oy-1) or isInTable(allVisibleX, allVisibleY, ox+2, oy) or isInTable(allVisibleX, allVisibleY, ox+2, oy-1))) then
+        if not ( object.r == 0 and (isInTable(allVisibleX, allVisibleY, ox, oy-1) or isInTable(allVisibleX, allVisibleY, ox+1, oy-1) or isInTable(allVisibleX, allVisibleY, ox, oy+2) or isInTable(allVisibleX, allVisibleY, ox+1, oy+2) or isInTable(allVisibleX, allVisibleY, ox-1, oy) or isInTable(allVisibleX, allVisibleY, ox-1, oy+1) or isInTable(allVisibleX, allVisibleY, ox+2, oy) or isInTable(allVisibleX, allVisibleY, ox+2, oy+1))
+                 or object.r == 1 and (isInTable(allVisibleX, allVisibleY, ox+1, oy) or isInTable(allVisibleX, allVisibleY, ox+1, oy+1) or isInTable(allVisibleX, allVisibleY, ox-2, oy) or isInTable(allVisibleX, allVisibleY, ox-2, oy+1) or isInTable(allVisibleX, allVisibleY, ox, oy-1) or isInTable(allVisibleX, allVisibleY, ox-1, oy-1) or isInTable(allVisibleX, allVisibleY, ox, oy+2) or isInTable(allVisibleX, allVisibleY, ox-1, oy+2))
+                 or object.r == 2 and (isInTable(allVisibleX, allVisibleY, ox, oy+1) or isInTable(allVisibleX, allVisibleY, ox-1, oy+1) or isInTable(allVisibleX, allVisibleY, ox, oy-2) or isInTable(allVisibleX, allVisibleY, ox-1, oy-2) or isInTable(allVisibleX, allVisibleY, ox-2, oy) or isInTable(allVisibleX, allVisibleY, ox-2, oy-1) or isInTable(allVisibleX, allVisibleY, ox+1, oy) or isInTable(allVisibleX, allVisibleY, ox+1, oy-1))
+                 or object.r == 3 and (isInTable(allVisibleX, allVisibleY, ox-1, oy) or isInTable(allVisibleX, allVisibleY, ox-1, oy-1) or isInTable(allVisibleX, allVisibleY, ox+2, oy) or isInTable(allVisibleX, allVisibleY, ox+2, oy-1)) or isInTable(allVisibleX, allVisibleY, ox, oy+1) or isInTable(allVisibleX, allVisibleY, ox+1, oy+1) or isInTable(allVisibleX, allVisibleY, ox, oy-2) or isInTable(allVisibleX, allVisibleY, ox+1, oy-2)) then
             table.insert(object.errorStr, "A bed needs to be accessible from the side.")
             return false
         end
