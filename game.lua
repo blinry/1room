@@ -93,18 +93,19 @@ end
 function drawRoom()
     for x = 1,100 do
         for y = 1,100 do
+            love.graphics.setColor(255, 255, 255)
             if room.floor[x][y] == "floor" then
-                love.graphics.setColor(255, 255, 255)
                 love.graphics.draw(images.parquet, tilesize*x, tilesize*y, 0)
             end
 
+            love.graphics.setColor(255, 255, 255)
             local top = room.horizontal[x][y]
             if top == "wall" then
-                love.graphics.setColor(255, 255, 255)
-                love.graphics.line(tilesize*x, tilesize*y, tilesize*x+tilesize, tilesize*y)
+                --love.graphics.line(tilesize*x, tilesize*y, tilesize*x+tilesize, tilesize*y)
+                love.graphics.draw(images.wall, tilesize*x, tilesize*y+1, -math.pi/2)
             elseif top == "window" then
-                love.graphics.setColor(0, 0, 255)
-                love.graphics.line(tilesize*x, tilesize*y, tilesize*x+tilesize, tilesize*y)
+                --love.graphics.line(tilesize*x, tilesize*y, tilesize*x+tilesize, tilesize*y)
+                love.graphics.draw(images.window, tilesize*x, tilesize*y+1, -math.pi/2)
             elseif top == "door_top" then
                 love.graphics.setColor(255, 0, 0)
                 love.graphics.arc("line", tilesize*x, tilesize*y, tilesize, 0, -math.pi/2)
@@ -113,13 +114,14 @@ function drawRoom()
                 love.graphics.arc("line", tilesize*x, tilesize*y, tilesize, 0, math.pi/2)
             end
 
+            love.graphics.setColor(255, 255, 255)
             local left = room.vertical[x][y]
             if left == "wall" then
-                love.graphics.setColor(255, 255, 255)
-                love.graphics.line(tilesize*x, tilesize*y, tilesize*x, tilesize*y+tilesize)
+                --love.graphics.line(tilesize*x, tilesize*y, tilesize*x, tilesize*y+tilesize)
+                love.graphics.draw(images.wall, tilesize*x-1, tilesize*y, 0)
             elseif left == "window" then
-                love.graphics.setColor(0, 0, 255)
-                love.graphics.line(tilesize*x, tilesize*y, tilesize*x, tilesize*y+tilesize)
+                --love.graphics.line(tilesize*x, tilesize*y, tilesize*x, tilesize*y+tilesize)
+                love.graphics.draw(images.window, tilesize*x-1, tilesize*y, 0)
             elseif left == "door_right" then
                 love.graphics.setColor(255, 0, 0)
                 love.graphics.arc("line", tilesize*x, tilesize*y, tilesize, 0, math.pi/2)
@@ -299,9 +301,8 @@ function allowed(object)
             nope("A bed needs to be accessible from the side.")
             return false
         end
-    else
-        return true
     end
+    return true
 end
 
 function occupied(x, y)
@@ -326,5 +327,7 @@ function accessible(x, y)
 end
 
 function nope(text)
-    nopeText = text
+    if nopeText == "" then
+        nopeText = text
+    end
 end
