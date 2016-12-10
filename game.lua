@@ -114,14 +114,14 @@ function drawRoom(room)
             elseif left == "window" then
                 love.graphics.setColor(0, 0, 255)
                 love.graphics.line(tilesize*x, tilesize*y, tilesize*x, tilesize*y+tilesize)
-            elseif top == "door_right" then
+            elseif left == "door_right" then
                 love.graphics.setColor(255, 0, 0)
-                --love.graphics.arc("line", tilesize*(x+1), tilesize*(y+1), tilesize, 0, -math.pi/2)
-                love.graphics.line(tilesize*x, tilesize*y, tilesize*x, tilesize*y+tilesize)
-            elseif top == "door_left" then
+                love.graphics.arc("line", tilesize*x, tilesize*y, tilesize, 0, math.pi/2)
+                --love.graphics.line(tilesize*x, tilesize*y, tilesize*x, tilesize*y+tilesize)
+            elseif left == "door_left" then
                 love.graphics.setColor(255, 0, 0)
-                --love.graphics.arc("line", tilesize*x, tilesize*y, tilesize, 0, math.pi/2)
-                love.graphics.line(tilesize*x, tilesize*y, tilesize*x, tilesize*y+tilesize)
+                love.graphics.arc("line", tilesize*x, tilesize*y, tilesize, math.pi/2, math.pi)
+                --love.graphics.line(tilesize*x, tilesize*y, tilesize*x, tilesize*y+tilesize)
             end
         end
     end
