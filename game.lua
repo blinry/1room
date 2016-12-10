@@ -163,7 +163,7 @@ function drawObject(object)
     if what == "plant" then
         love.graphics.draw(images.plant, -tilesize/2, -tilesize/2, 0)
     elseif what == "armchair" then
-        love.graphics.draw(images.armchair, -tilesize/2, -tilesize/2, 0)
+        love.graphics.draw(images.armchair, -tilesize/2, tilesize/2, -math.pi/2)
     elseif what == "shelf" then
         love.graphics.draw(images.bookshelf, -tilesize/2, tilesize/2, -math.pi/2)
     elseif what == "couch" then
@@ -240,10 +240,10 @@ function allowed(object)
     local oy = round(object.y)
 
     if object.what == "armchair" then
-        if not (object.r == 0 and accessible(ox+1, oy)
-                or object.r == 1 and accessible(ox, oy+1)
-                or object.r == 2 and accessible(ox-1, oy)
-                or object.r == 3 and accessible(ox, oy-1)) then
+        if not (object.r == 1 and accessible(ox+1, oy)
+                or object.r == 2 and accessible(ox, oy+1)
+                or object.r == 3 and accessible(ox-1, oy)
+                or object.r == 0 and accessible(ox, oy-1)) then
             nope("An armchair needs to be accessible from the front.")
             return false
         end
