@@ -4,6 +4,9 @@ function parseRoom(filename)
     legend["#"] = "wall"
     legend["="] = "window"
     legend["^"] = "door_top"
+    legend[">"] = "door_right"
+    legend["v"] = "door_bottom"
+    legend["<"] = "door_left"
     legend["."] = "floor"
 
     local room = {}
@@ -99,6 +102,9 @@ function drawRoom(room)
             elseif top == "door_top" then
                 love.graphics.setColor(255, 0, 0)
                 love.graphics.arc("line", tilesize*x, tilesize*y, tilesize, 0, -math.pi/2)
+            elseif top == "door_bottom" then
+                love.graphics.setColor(255, 0, 0)
+                love.graphics.arc("line", tilesize*x, tilesize*y, tilesize, 0, math.pi/2)
             end
 
             local left = room.vertical[x][y]
@@ -107,6 +113,14 @@ function drawRoom(room)
                 love.graphics.line(tilesize*x, tilesize*y, tilesize*x, tilesize*y+tilesize)
             elseif left == "window" then
                 love.graphics.setColor(0, 0, 255)
+                love.graphics.line(tilesize*x, tilesize*y, tilesize*x, tilesize*y+tilesize)
+            elseif top == "door_right" then
+                love.graphics.setColor(255, 0, 0)
+                --love.graphics.arc("line", tilesize*(x+1), tilesize*(y+1), tilesize, 0, -math.pi/2)
+                love.graphics.line(tilesize*x, tilesize*y, tilesize*x, tilesize*y+tilesize)
+            elseif top == "door_left" then
+                love.graphics.setColor(255, 0, 0)
+                --love.graphics.arc("line", tilesize*x, tilesize*y, tilesize, 0, math.pi/2)
                 love.graphics.line(tilesize*x, tilesize*y, tilesize*x, tilesize*y+tilesize)
             end
         end
