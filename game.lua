@@ -71,7 +71,7 @@ function parseRoom(filename)
         amount, what = string.match(line, "([0-9]+) (.+)")
 
         for j = 1, tonumber(amount) do
-            table.insert(room.objects, {what = what, x = x, y = y, r = 1})
+            table.insert(room.objects, {what = what, x = x, y = y, r = 1, errorStr = {}})
         end
 
         x = x+2
@@ -185,9 +185,10 @@ function drawObject(object)
 end
 
 function checkRules()
-    nopeText = ""
+    -- nopeText = ""
 
     for i=1,#objects do
+        objects[i].errorStr = {}
         objects[i].dirty = not allowed(objects[i])
     end
 
@@ -198,27 +199,27 @@ function checkRules()
                 if (doorypied(x,y)) then
                     for i=1,#what do
                         what[i].dirty = true
-                        nope("All doors need to be accessible.")
+                        table.insert(what[i].errorStr,"All doors need to be accessible.")
                     end
                 end
                 if (windowypied(x,y)) then
                     for i=1,#what do
                         if what[i].what == "shelf" then
                             what[i].dirty = true
-                            nope("Shelves must not block windows.")
+                            table.insert(what[i].errorStr,"Shelves must not block windows.")
                         end
                     end
                 end
                 if (#what > 1 and room.floor[x][y] == "floor") then
                     for i=1,#what do
                         what[i].dirty = true
-                        nope("Objects must not overlap.")
+                        table.insert(what[i].errorStr,"Objects must not overlap.")
                     end
                 else
                 if room.floor[x][y] == "empty" then
                   for i=1,#what do
                     what[i].dirty = true
-                    nope("All objects must be inside of the room.")
+                    table.insert(what[i].errorStr,"All objects must be inside of the room.")
                   end
                 end
                     -- TODO: degenerate walls
@@ -266,7 +267,7 @@ function allowed(object)
                 or object.r == 2 and accessible(ox, oy+1)
                 or object.r == 3 and accessible(ox-1, oy)
                 or object.r == 0 and accessible(ox, oy-1)) then
-            nope("An armchair needs to be accessible from the front.")
+                table.insert(object.errorStr,"An armchair needs to be accessible from the front.")
             return false
         end
 
@@ -275,13 +276,12 @@ function allowed(object)
                 or object.r == 1 and (accessible(ox+1, oy) or accessible(ox+1, oy+1))
                 or object.r == 2 and (accessible(ox, oy+1) or accessible(ox-1, oy+1))
                 or object.r == 3 and (accessible(ox-1, oy) or accessible(ox-1, oy-1))) then
-            nope("A "..object.what.."'s front needs to be accessible.")
+                table.insert(object.errorStr,"A "..object.what.."'s front needs to be accessible.")
             return false
         end
     elseif object.what == "officechair" then
         return accessible(ox+1,oy) or accessible(ox-1, oy) or accessible(ox, oy+1)  or accessible(ox,oy-1)  
     elseif object.what == "table" then
-        ok = false
         what = occupied(ox+1,oy)
         if what then
           if what[1].what == "couch" and what[1].r ~= 1 then
@@ -307,7 +307,7 @@ function allowed(object)
           end
         end
         if not ok then
-            nope("A "..object.what.." needs to be in front or next to a couch.")
+            table.insert(object.errorStr, "A "..object.what.." needs to be in front or next to a couch.")
         end
         return ok
     elseif object.what == "bed" then
@@ -315,7 +315,7 @@ function allowed(object)
                  or object.r == 1 and (accessible(ox+1, oy) or accessible(ox+1, oy+1) or accessible(ox-2, oy) or accessible(ox-2, oy+1) or accessible(ox, oy-1) or accessible(ox-1, oy-1) or accessible(ox, oy+2) or accessible(ox-1, oy+2))
                  or object.r == 2 and (accessible(ox, oy+1) or accessible(ox-1, oy+1) or accessible(ox, oy-2) or accessible(ox-1, oy-2) or accessible(ox-2, oy) or accessible(ox-2, oy-1) or accessible(ox+1, oy) or accessible(ox+1, oy-1))
                  or object.r == 3 and (accessible(ox-1, oy) or accessible(ox-1, oy-1) or accessible(ox+2, oy) or accessible(ox+2, oy-1) or accessible(ox, oy+1) or accessible(ox+1, oy+1) or accessible(ox, oy-2) or accessible(ox+1, oy-2))) then
-            nope("A bed needs to be accessible from the side.")
+            table.insert(object.errorStr, "A bed needs to be accessible from the side.")
             return false
         end
     end

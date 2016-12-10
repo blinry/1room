@@ -115,5 +115,19 @@ function love.draw()
     love.graphics.print(room.name, 100, 0)
 
     love.graphics.setColor(255, 0, 0)
-    love.graphics.print(nopeText, 10, 160)
+
+    tx = math.floor(round(love.mouse.getX())/scale/tilesize)
+    ty = math.floor(round(love.mouse.getY())/scale/tilesize)
+    
+    what = occupied(tx,ty)
+    
+    if what then
+      for i = 1, #what do
+        if what[i].errorStr ~= nil then
+          for j = 1, #what[i].errorStr do
+            love.graphics.print(what[i].errorStr[j], 10, 120 + 10 * i + 10 * j)
+          end
+        end
+      end
+    end
 end
