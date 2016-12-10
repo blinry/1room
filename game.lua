@@ -164,6 +164,10 @@ function drawObject(object)
         love.graphics.draw(images.plant, -tilesize/2, -tilesize/2, 0)
     elseif what == "armchair" then
         love.graphics.draw(images.armchair, -tilesize/2, -tilesize/2, 0)
+    elseif what == "officechair" then
+        love.graphics.draw(images.officechair, -tilesize/2, -tilesize/2, 0)
+    elseif what == "table" then
+        love.graphics.draw(images.couchtable, -tilesize/2, -tilesize/2, 0)
     elseif what == "shelf" then
         love.graphics.draw(images.bookshelf, -tilesize/2, tilesize/2, -math.pi/2)
     elseif what == "couch" then
@@ -186,7 +190,7 @@ function checkRules()
     end
 
     for x = 1,100 do
-        for y = 1,100 do
+        for y = 1,99 do
             what = occupied(x,y)
             if what then
                 if (#what > 1 and room.floor[x][y] == "floor") then
@@ -214,7 +218,7 @@ function occupies(object, x, y)
     local oy = round(object.y)
     local r = object.r
 
-    if what == "plant" or what == "armchair" then
+    if what == "plant" or what == "armchair" or what == "officechair" or what == "table"  then
         return ox == x and oy == y
     elseif what == "shelf" or what == "couch" or what == "desk" then
         return (x == ox and y == oy) or
@@ -242,22 +246,51 @@ function allowed(object)
     local oy = round(object.y)
 
     if object.what == "armchair" then
-        if not (object.r == 0 and accessible(ox+1, oy)
-                or object.r == 1 and accessible(ox, oy+1)
-                or object.r == 2 and accessible(ox-1, oy)
-                or object.r == 3 and accessible(ox, oy-1)) then
+        if not (object.r == 1 and accessible(ox+1, oy)
+                or object.r == 2 and accessible(ox, oy+1)
+                or object.r == 3 and accessible(ox-1, oy)
+                or object.r == 0 and accessible(ox, oy-1)) then
             nope("An armchair needs to be accessible from the front.")
             return false
         end
 
     elseif object.what == "couch" or object.what == "shelf" then
-        if not (object.r == 0 and accessible(ox, oy-1) and accessible(ox+1, oy-1)
-                or object.r == 1 and accessible(ox+1, oy) and accessible(ox+1, oy+1)
-                or object.r == 2 and accessible(ox, oy+1) and accessible(ox-1, oy+1)
-                or object.r == 3 and accessible(ox-1, oy) and accessible(ox-1, oy-1)) then
+        if not (object.r == 0 and (accessible(ox, oy-1) or accessible(ox+1, oy-1))
+                or object.r == 1 and (accessible(ox+1, oy) or accessible(ox+1, oy+1))
+                or object.r == 2 and (accessible(ox, oy+1) or accessible(ox-1, oy+1))
+                or object.r == 3 and (accessible(ox-1, oy) and accessible(ox-1, oy-1))) then
             nope("A "..object.what.."'s complete front needs to be accessible.")
             return false
         end
+    elseif object.what == "officechair" then
+        return accessible(ox+1,oy) or accessible(ox-1, oy) or accessible(ox, oy+1)  or accessible(ox,oy-1)  
+    elseif object.what == "table" then
+        ok = false
+        what = occupied(ox+1,oy)
+        if what then
+          if what[1].what == "couch" and what[1].r ~= 1 then
+             ok = true 
+          end
+        end
+        what = occupied(ox-1,oy)
+        if what then
+          if what[1].what == "couch" and what[1].r ~= 3 then
+            ok = true
+          end
+        end
+        what = occupied(ox,oy+1)
+        if what then
+          if what[1].what == "couch" and what[1].r ~= 0 then
+            ok = true
+          end
+        end
+        what = occupied(ox,oy-1)
+        if what then
+          if what[1].what == "couch" and what[1].r ~= 2 then
+            ok = true
+          end
+        end
+        return ok
     elseif object.what == "bed" then
         if not ( object.r == 0 and (accessible(ox, oy-1) or accessible(ox+1, oy-1) or accessible(ox, oy+2) or accessible(ox+1, oy+2))
                  or object.r == 1 and (accessible(ox+1, oy) or accessible(ox+1, oy+1) or accessible(ox-2, oy) or accessible(ox-2, oy+1))
@@ -266,8 +299,9 @@ function allowed(object)
             nope("A bed needs to be accessible from the side.")
             return false
         end
-    end
+    else
         return true
+    end
 end
 
 function occupied(x, y)
