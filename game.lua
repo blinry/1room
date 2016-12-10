@@ -289,8 +289,6 @@ function allowed(object)
           end
         end
         return ok
-    else
-        return true
     elseif object.what == "bed" then
         if not ( object.r == 0 and (accessible(ox, oy-1) or accessible(ox+1, oy-1) or accessible(ox, oy+2) or accessible(ox+1, oy+2))
                  or object.r == 1 and (accessible(ox+1, oy) or accessible(ox+1, oy+1) or accessible(ox-2, oy) or accessible(ox-2, oy+1))
@@ -299,8 +297,9 @@ function allowed(object)
             nope("A bed needs to be accessible from the side.")
             return false
         end
-    end
+    else
         return true
+    end
 end
 
 function occupied(x, y)
