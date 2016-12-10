@@ -101,35 +101,25 @@ function drawRoom()
             love.graphics.setColor(255, 255, 255)
             local top = room.horizontal[x][y]
             if top == "wall" then
-                --love.graphics.line(tilesize*x, tilesize*y, tilesize*x+tilesize, tilesize*y)
                 love.graphics.draw(images.wall, tilesize*x, tilesize*y+1, -math.pi/2)
             elseif top == "window" then
-                --love.graphics.line(tilesize*x, tilesize*y, tilesize*x+tilesize, tilesize*y)
                 love.graphics.draw(images.window, tilesize*x, tilesize*y+1, -math.pi/2)
             elseif top == "door_top" then
-                love.graphics.setColor(255, 0, 0)
-                love.graphics.arc("line", tilesize*x, tilesize*y, tilesize, 0, -math.pi/2)
+                love.graphics.draw(images.door, tilesize*x, tilesize*(y-1), 0)
             elseif top == "door_bottom" then
-                love.graphics.setColor(255, 0, 0)
-                love.graphics.arc("line", tilesize*x, tilesize*y, tilesize, 0, math.pi/2)
+                love.graphics.draw(images.door, tilesize*(x+1), tilesize*(y+1), math.pi)
             end
 
             love.graphics.setColor(255, 255, 255)
             local left = room.vertical[x][y]
             if left == "wall" then
-                --love.graphics.line(tilesize*x, tilesize*y, tilesize*x, tilesize*y+tilesize)
                 love.graphics.draw(images.wall, tilesize*x-1, tilesize*y, 0)
             elseif left == "window" then
-                --love.graphics.line(tilesize*x, tilesize*y, tilesize*x, tilesize*y+tilesize)
                 love.graphics.draw(images.window, tilesize*x-1, tilesize*y, 0)
             elseif left == "door_right" then
-                love.graphics.setColor(255, 0, 0)
-                love.graphics.arc("line", tilesize*x, tilesize*y, tilesize, 0, math.pi/2)
-                --love.graphics.line(tilesize*x, tilesize*y, tilesize*x, tilesize*y+tilesize)
+                love.graphics.draw(images.door, tilesize*(x+1), tilesize*(y), -3*math.pi/2)
             elseif left == "door_left" then
-                love.graphics.setColor(255, 0, 0)
-                love.graphics.arc("line", tilesize*x, tilesize*y, tilesize, math.pi/2, math.pi)
-                --love.graphics.line(tilesize*x, tilesize*y, tilesize*x, tilesize*y+tilesize)
+                love.graphics.draw(images.door, tilesize*(x-1), tilesize*(y+1), -math.pi/2)
             end
         end
     end
