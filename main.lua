@@ -160,7 +160,7 @@ function love.draw()
                 love.graphics.polygon("fill", 295,18, 305, 18, 300, 23) 
               end
               love.graphics.setColor(255, 255, 255)
-              love.graphics.print(room.won[1], 116, 8)
+              love.graphics.print(room.won[1], 110, 8)
             end
             love.graphics.setColor(0, 200, 0)
         else
@@ -177,7 +177,7 @@ function love.draw()
             love.graphics.polygon("fill", 295,17, 305, 17, 300, 22) 
           end
           love.graphics.setColor(255, 255, 255)
-          love.graphics.print(room.story[1], 116, 8)
+          love.graphics.print(room.story[1], 110, 8)
         end
 
         love.graphics.translate(0, 16)
@@ -218,6 +218,11 @@ function love.draw()
     elseif mode == "menu" then
         love.graphics.setColor(91, 110, 225)
         love.graphics.printf("SELECT A LEVEL", 0, 8, 320, "center")
+
+        love.graphics.setColor(100, 100, 100)
+        love.graphics.setFont(fonts.m3x6[16])
+        love.graphics.printf("Music: \"Welcome!\" by RoccoW, cc-by-sa 4.0, http://freemusicarchive.org/music/RoccoW/_1035/", 0, 145, 320, "center")
+        love.graphics.setFont(fonts.m5x7[16])
 
         local x = 16
         local y = 32
