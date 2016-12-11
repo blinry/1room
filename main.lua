@@ -63,7 +63,7 @@ end
 function love.mousepressed(x, y, button, touch)
     if mode == "game" then
         tx = math.floor(x/scale/tilesize)
-        ty = math.floor(y/scale/tilesize)
+        ty = math.floor(y/scale/tilesize)-1
 
         if button == 1 then
             what = occupied(tx, ty)
@@ -115,7 +115,7 @@ function love.mousemoved(x, y, dx, dy, touch)
     if mode == "game" then
         if holding then
             holding.x = x/scale/tilesize-0.5
-            holding.y = y/scale/tilesize-0.5
+            holding.y = y/scale/tilesize-0.5-1
         end
 
         checkRules()
@@ -126,14 +126,6 @@ function love.draw()
     love.graphics.scale(scale, scale)
 
     if mode == "game" then
-        drawRoom()
-
-        for i = 1, #objects do
-            drawObject(objects[i])
-        end
-
-        --drawDebug()
-
         if room.solved then
             love.graphics.setColor(0, 200, 0)
         else
@@ -141,10 +133,18 @@ function love.draw()
         end
         love.graphics.printf(room.name, 0, 8, 320, "center")
 
+        love.graphics.translate(0, 16)
+
+        drawRoom()
+        for i = 1, #objects do
+            drawObject(objects[i])
+        end
+        --drawDebug()
+
         love.graphics.setColor(255, 0, 0)
 
         tx = math.floor(round(love.mouse.getX())/scale/tilesize)
-        ty = math.floor(round(love.mouse.getY())/scale/tilesize)
+        ty = math.floor(round(love.mouse.getY())/scale/tilesize)-1
 
         what = occupied(tx,ty)
 
@@ -152,7 +152,7 @@ function love.draw()
           for i = 1, #what do
             if what[i].errorStr ~= nil then
               for j = 1, #what[i].errorStr do
-                love.graphics.print(what[i].errorStr[j], 10, 120 + 10 * i + 10 * j)
+                love.graphics.print(what[i].errorStr[j], 16, 109 + 10 * i + 10 * j)
               end
             end
           end
