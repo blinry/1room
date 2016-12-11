@@ -575,6 +575,7 @@ function allowed(object)
                 or object.r == 2 and (isInTable(allVisibleX, allVisibleY, ox, oy+1) and noWall(ox,oy,r) and isInTable(allVisibleX, allVisibleY, ox-1, oy+1) and noWall(ox-1,oy,r))
                 or object.r == 3 and (isInTable(allVisibleX, allVisibleY, ox-1, oy) and noWall(ox,oy,r) and isInTable(allVisibleX, allVisibleY, ox-1, oy-1) and noWall(ox,oy-1,r))) then
                 table.insert(object.errorStr,"The "..object.what.."'s whole front needs to be accessible.")
+            return false
         end
     elseif object.what == "shelf" then
         local r = object.r
