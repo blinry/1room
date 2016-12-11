@@ -189,6 +189,7 @@ function love.draw()
           end
         end
     elseif mode == "title" then
+        love.graphics.setColor(255, 255, 255)
         love.graphics.draw(images.title, 0, 0)
     elseif mode == "menu" then
         love.graphics.setColor(0, 0, 255)
