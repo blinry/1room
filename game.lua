@@ -17,6 +17,8 @@ function parseRoom(filename)
     room.doorY = {}
     room.name = string.match(string.match(filename, "[^/]+.txt"), "[^/.]+")
     room.solved = false
+    room.story = {}
+    room.won = {}
 
     for i = 1,101 do
         room.floor[i] = {}
@@ -67,7 +69,7 @@ function parseRoom(filename)
     while true do
         local line = f:read()
 
-        if line == nil then
+        if line == "---" or line == nil  then
             break
         end
 
@@ -82,6 +84,24 @@ function parseRoom(filename)
             y = 1
             x = x-4
         end
+    end
+
+    while true do
+      local line = f:read()
+
+       if line == nil or line == "---" then
+         break
+       end
+       table.insert(room.story, line)
+    end
+
+    while true do
+      local line = f:read()
+
+       if line == nil or line == "---" then
+         break
+       end
+       table.insert(room.won, line)
     end
 
     return room
@@ -375,7 +395,7 @@ function checkRules()
 
     for i=1,#objects do
         objects[i].errorStr = {}
-        if objects[i].x < 12 then
+        if objects[i].x < 13 then
             objects[i].dirty = not allowed(objects[i])
         else
             solved = false
@@ -388,6 +408,41 @@ function checkRules()
     end
     
     wallypied()
+
+    y = 0
+    for x = 0,99 do
+        what = occupied(x,y)
+        if what then
+            for i=1,#what do
+                what[i].dirty = true
+                table.insert(what[i].errorStr,"All objects must be inside of the room.")
+            end
+        end
+        what = occupied(y,x)
+        if what then
+            for i=1,#what do
+                what[i].dirty = true
+                table.insert(what[i].errorStr,"All objects must be inside of the room.")
+            end
+        end
+    end
+    y = -1
+    for x = 0,99 do
+        what = occupied(x,y)
+        if what then
+            for i=1,#what do
+                what[i].dirty = true
+                table.insert(what[i].errorStr,"All objects must be inside of the room.")
+            end
+        end
+        what = occupied(y,x)
+        if what then
+            for i=1,#what do
+                what[i].dirty = true
+                table.insert(what[i].errorStr,"All objects must be inside of the room.")
+            end
+        end
+    end
 
     for x = 1,12 do
         for y = 1,99 do
@@ -492,7 +547,7 @@ function allowed(object)
         end
     elseif object.what == "officechair" then
         if not (isInTable(allVisibleX, allVisibleY, ox+1,oy) or isInTable(allVisibleX, allVisibleY, ox-1, oy) or isInTable(allVisibleX, allVisibleY, ox, oy+1)  or isInTable(allVisibleX, allVisibleY, ox,oy-1)) then
-            table.insert("Office chair needs to be accessible.")
+            table.insert(object.errorStr, "Office chair needs to be accessible.")
             return false
         end
     elseif object.what == "table" then
@@ -522,6 +577,72 @@ function allowed(object)
         end
         if not ok then
             table.insert(object.errorStr, "Table needs to be in front or next to a couch.")
+        end
+        return ok
+    elseif object.what == "desk" then
+        ok = false
+        if object.r == 0 then
+          what = occupied(ox,oy-1)
+          if what then
+            if what[1].what == "officechair" then
+             ok = true 
+            end
+          end
+
+          what = occupied(ox+1, oy-1)
+          if what then
+            if what[1].what == "officechair" then
+              ok = true 
+            end
+          end
+          
+        elseif object.r == 1 then
+          what = occupied(ox+1,oy)
+          if what then
+            if what[1].what == "officechair" then
+             ok = true 
+            end
+          end
+         
+          what = occupied(ox+1, oy+1)
+          if what then
+            if what[1].what == "officechair" then
+              ok = true 
+            end
+          end
+        
+        elseif object.r == 2 then
+          what = occupied(ox,oy+1)
+          if what then
+            if what[1].what == "officechair" then
+             ok = true 
+            end
+          end
+
+          what = occupied(ox-1, oy+1)
+          if what then
+            if what[1].what == "officechair" then
+              ok = true 
+            end
+          end
+          
+        elseif object.r == 3 then
+          what = occupied(ox-1,oy)
+          if what then
+            if what[1].what == "officechair" then
+             ok = true 
+            end
+          end
+
+          what = occupied(ox-1, oy-1)
+          if what then
+            if what[1].what == "officechair" then
+              ok = true 
+            end
+          end
+        end
+        if not ok then
+            table.insert(object.errorStr, "An officechair needs to be in front of a desk.")
         end
         return ok
     elseif object.what == "bed" then
