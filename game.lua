@@ -424,11 +424,11 @@ function allowed(object)
         end
 
     elseif object.what == "couch" or object.what == "shelf" then
-        if not (object.r == 0 and (isInTable(allVisibleX, allVisibleY, ox, oy-1) or isInTable(allVisibleX, allVisibleY, ox+1, oy-1))
-                or object.r == 1 and (isInTable(allVisibleX, allVisibleY, ox+1, oy) or isInTable(allVisibleX, allVisibleY, ox+1, oy+1))
-                or object.r == 2 and (isInTable(allVisibleX, allVisibleY, ox, oy+1) or isInTable(allVisibleX, allVisibleY, ox-1, oy+1))
-                or object.r == 3 and (isInTable(allVisibleX, allVisibleY, ox-1, oy) or isInTable(allVisibleX, allVisibleY, ox-1, oy-1))) then
-                table.insert(object.errorStr,object.what.." needs to be accessible from the front.")
+        if not (object.r == 0 and (isInTable(allVisibleX, allVisibleY, ox, oy-1) and isInTable(allVisibleX, allVisibleY, ox+1, oy-1))
+                or object.r == 1 and (isInTable(allVisibleX, allVisibleY, ox+1, oy) and isInTable(allVisibleX, allVisibleY, ox+1, oy+1))
+                or object.r == 2 and (isInTable(allVisibleX, allVisibleY, ox, oy+1) and isInTable(allVisibleX, allVisibleY, ox-1, oy+1))
+                or object.r == 3 and (isInTable(allVisibleX, allVisibleY, ox-1, oy) and isInTable(allVisibleX, allVisibleY, ox-1, oy-1))) then
+                table.insert(object.errorStr,"A "..object.what.."'s whole front needs to be accessible.")
             return false
         end
     elseif object.what == "officechair" then
