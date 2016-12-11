@@ -1,7 +1,4 @@
 require "slam"
-vector = require "hump.vector"
-Timer = require "hump.timer"
-
 require "helpers"
 require "game"
 
@@ -30,15 +27,8 @@ function love.load()
     holding = nil
 end
 
-function love.update(dt)
-    Timer.update(dt)
-end
-
 function love.keypressed(key)
     if key == "escape" then
-        -- why did we need this again?
-        -- love.window.setFullscreen(false)
-        -- love.timer.sleep(0.1)
         if mode == "game" then
             mode = "menu"
             love.audio.play(sounds.back)
