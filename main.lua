@@ -134,8 +134,8 @@ end
 function love.mousemoved(x, y, dx, dy, touch)
     if mode == "game" then
         if holding then
-            holding.x = x/scale/tilesize-0.5
-            holding.y = y/scale/tilesize-0.5-1
+            holding.x = round(x/scale/tilesize-0.5)
+            holding.y = round(y/scale/tilesize-0.5-1)
         end
 
         checkRules()

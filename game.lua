@@ -448,7 +448,7 @@ function checkRules()
         end
     end
 
-    for x = 1,10 do
+    for x = 1,11 do
         for y = 1,99 do
             what = occupied(x,y)
             if what then
