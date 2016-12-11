@@ -343,6 +343,41 @@ function checkRules()
         end
     end
 
+    y = 0
+    for x = 0,99 do
+        what = occupied(x,y)
+        if what then
+            for i=1,#what do
+                what[i].dirty = true
+                table.insert(what[i].errorStr,"All objects must be inside of the room.")
+            end
+        end
+        what = occupied(y,x)
+        if what then
+            for i=1,#what do
+                what[i].dirty = true
+                table.insert(what[i].errorStr,"All objects must be inside of the room.")
+            end
+        end
+    end
+    y = -1
+    for x = 0,99 do
+        what = occupied(x,y)
+        if what then
+            for i=1,#what do
+                what[i].dirty = true
+                table.insert(what[i].errorStr,"All objects must be inside of the room.")
+            end
+        end
+        what = occupied(y,x)
+        if what then
+            for i=1,#what do
+                what[i].dirty = true
+                table.insert(what[i].errorStr,"All objects must be inside of the room.")
+            end
+        end
+    end
+
     for x = 1,12 do
         for y = 1,99 do
             what = occupied(x,y)
