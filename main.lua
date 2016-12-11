@@ -134,8 +134,8 @@ end
 function love.mousemoved(x, y, dx, dy, touch)
     if mode == "game" then
         if holding then
-            holding.x = x/scale/tilesize-0.5
-            holding.y = y/scale/tilesize-0.5-1
+            holding.x = round(x/scale/tilesize-0.5)
+            holding.y = round(y/scale/tilesize-0.5-1)
         end
 
         checkRules()
@@ -148,12 +148,12 @@ function love.draw()
     if mode == "game" then
 
         love.graphics.setColor(50, 50, 50)
-        love.graphics.rectangle("fill", 12*tilesize-4, 2*tilesize-4, 8*tilesize+8, 7*tilesize+8)
+        love.graphics.rectangle("fill", 12*tilesize-4, 2*tilesize-4, 7*tilesize+8, 7*tilesize+8)
 
         if room.solved then
             room.story = {}
             if room.won[1] ~= nil then
-	      love.graphics.setColor(44, 44, 200)
+        love.graphics.setColor(91, 110, 225)
               love.graphics.rectangle("fill", 106, 5, 200, 20)
               if room.won[2] ~= nil then
 	        love.graphics.setColor(0, 0, 0)
@@ -170,7 +170,7 @@ function love.draw()
         love.graphics.print(room.name, 16, 8)
 
         if room.story[1] ~= nil then
-	  love.graphics.setColor(44, 44, 200)
+        love.graphics.setColor(91, 110, 225)
           love.graphics.rectangle("fill", 106, 5, 200, 20)
           if room.story[2] ~= nil then
 	    love.graphics.setColor(0, 0, 0)
@@ -216,7 +216,7 @@ function love.draw()
         love.graphics.setColor(255, 255, 255)
         love.graphics.draw(images.title, 0, 0)
     elseif mode == "menu" then
-        love.graphics.setColor(0, 0, 255)
+        love.graphics.setColor(91, 110, 225)
         love.graphics.printf("SELECT A LEVEL", 0, 8, 320, "center")
 
         local x = 16

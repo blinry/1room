@@ -15,13 +15,21 @@
 2 officechair
 1 table
 4 shelf
-1 armchair
-1 couch
+2 couch
 3 plant
 2 desk
 1 bed
 ---
 What a nice appartment!
 Let's place the furniture.
+They even have an armchair.
+I always wanted one of those.
+There front needs to be
+accessible though.
+Then there is also a table.
+It needs to be placed
+close to a couch.
+And - surprise - it may
+even be closed in its front.
 ---
-Looks nice!
+Looks nice, let's stay a bit.
