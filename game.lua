@@ -17,6 +17,8 @@ function parseRoom(filename)
     room.doorY = {}
     room.name = string.match(string.match(filename, "[^/]+.txt"), "[^/.]+")
     room.solved = false
+    room.story = {}
+    room.won = {}
 
     for i = 1,101 do
         room.floor[i] = {}
@@ -67,7 +69,7 @@ function parseRoom(filename)
     while true do
         local line = f:read()
 
-        if line == nil then
+        if line == "---" or line == nil  then
             break
         end
 
@@ -82,6 +84,24 @@ function parseRoom(filename)
             y = 1
             x = x-4
         end
+    end
+
+    while true do
+      local line = f:read()
+
+       if line == nil or line == "---" then
+         break
+       end
+       table.insert(room.story, line)
+    end
+
+    while true do
+      local line = f:read()
+
+       if line == nil or line == "---" then
+         break
+       end
+       table.insert(room.won, line)
     end
 
     return room
@@ -466,54 +486,57 @@ function allowed(object)
             if what[1].what == "officechair" then
              ok = true 
             end
-          else
-            what = occupied(ox+1, oy-1)
-            if what then
-              if what[1].what == "officechair" then
-                ok = true 
-              end
+          end
+
+          what = occupied(ox+1, oy-1)
+          if what then
+            if what[1].what == "officechair" then
+              ok = true 
             end
           end
+          
         elseif object.r == 1 then
           what = occupied(ox+1,oy)
           if what then
             if what[1].what == "officechair" then
              ok = true 
             end
-          else
-            what = occupied(ox+1, oy+1)
-            if what then
-              if what[1].what == "officechair" then
-                ok = true 
-              end
+          end
+         
+          what = occupied(ox+1, oy+1)
+          if what then
+            if what[1].what == "officechair" then
+              ok = true 
             end
           end
+        
         elseif object.r == 2 then
           what = occupied(ox,oy+1)
           if what then
             if what[1].what == "officechair" then
              ok = true 
             end
-          else
-            what = occupied(ox-1, oy+1)
-            if what then
-              if what[1].what == "officechair" then
-                ok = true 
-              end
+          end
+
+          what = occupied(ox-1, oy+1)
+          if what then
+            if what[1].what == "officechair" then
+              ok = true 
             end
           end
+          
         elseif object.r == 3 then
           what = occupied(ox-1,oy)
           if what then
             if what[1].what == "officechair" then
              ok = true 
             end
-          else
-            what = occupied(ox-1, oy-1)
-            if what then
-              if what[1].what == "officechair" then
-                ok = true 
-              end
+          end
+
+          what = occupied(ox-1, oy-1)
+          if what then
+            if what[1].what == "officechair" then
+              ok = true 
             end
           end
         end
