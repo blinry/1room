@@ -17,9 +17,9 @@
 8 plant
 8 shelf
 ---
-This is big library.
+This is a big library.
 I guess.
-I am not actually interessted...
+I am not actually interested...
 I prefer computer games.
 I'll leave it to you.
 ---
