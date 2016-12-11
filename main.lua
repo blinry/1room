@@ -168,7 +168,7 @@ function love.draw()
             love.graphics.setColor(255, 255, 255)
         end
 
-        love.graphics.print(room.name, 16, 8)
+        love.graphics.print(currentRoom..": "..room.name, 16, 8)
 
         if room.story[1] ~= nil then
         love.graphics.setColor(91, 110, 225)
@@ -241,7 +241,7 @@ function love.draw()
                     love.graphics.setColor(100, 100, 100)
                 end
             end
-            love.graphics.print(rooms[i].name, x, y)
+            love.graphics.print(i..": "..rooms[i].name, x, y)
                 y = y+23
             if y > 140 then
                 x = x+85+16

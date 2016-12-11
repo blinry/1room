@@ -15,7 +15,7 @@ function parseRoom(filename)
     room.vertical = {}
     room.doorX = {}
     room.doorY = {}
-    room.name = string.match(string.match(filename, "[^/]+.txt"), "[^/.]+")
+    room.name = string.match(string.match(filename, "[^/]+.txt"), "[^/.]+"):sub(4):gsub("_", " ")
     room.solved = false
     room.story = {}
     room.won = {}
