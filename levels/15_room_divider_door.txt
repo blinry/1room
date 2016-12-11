@@ -1,0 +1,27 @@
+ # # # # #
+>. . . . .=
+
+#. . . . .=
+
+#. . . . .=
+ # v       # #
+#. .#. . . . .#
+     # # #
+#. . . . . . .<
+
+#. . . . . . .#
+       = = = #
+#. . .#
+ # # #
+---
+6 plant
+3 shelf
+2 desk
+2 officechair
+1 couch
+2 bed
+---
+Oh, here we have an extra door.
+You should leave a path in between.
+---
+Great, let's move on.
