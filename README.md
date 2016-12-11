@@ -1,4 +1,0 @@
-teeest
-Assets used:
-
-- ...
