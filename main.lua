@@ -147,27 +147,31 @@ function love.draw()
 
     if mode == "game" then
         if room.solved then
-            love.graphics.setColor(0, 200, 0)
             room.story = {}
             if room.won[1] ~= nil then
 	      love.graphics.setColor(44, 44, 200)
               love.graphics.rectangle("fill", 106, 5, 200, 20)
-	      love.graphics.setColor(0, 0, 0)
-              love.graphics.polygon("fill", 280,15, 300, 15, 290, 20) 
+              if room.won[2] ~= nil then
+	        love.graphics.setColor(0, 0, 0)
+                love.graphics.polygon("fill", 295,18, 305, 18, 300, 23) 
+              end
               love.graphics.setColor(255, 255, 255)
               love.graphics.print(room.won[1], 116, 8)
             end
+            love.graphics.setColor(0, 200, 0)
         else
             love.graphics.setColor(255, 255, 255)
         end
+
         love.graphics.print(room.name, 16, 8)
 
         if room.story[1] ~= nil then
 	  love.graphics.setColor(44, 44, 200)
           love.graphics.rectangle("fill", 106, 5, 200, 20)
-	  love.graphics.setColor(0, 0, 0)
-          love.graphics.polygon("fill", 280,15, 300, 15, 290, 20) 
-
+          if room.story[2] ~= nil then
+	    love.graphics.setColor(0, 0, 0)
+            love.graphics.polygon("fill", 295,18, 305, 18, 300, 23) 
+          end
           love.graphics.setColor(255, 255, 255)
           love.graphics.print(room.story[1], 116, 8)
         end
@@ -203,6 +207,7 @@ function love.draw()
           end
         end
     elseif mode == "title" then
+        love.graphics.setColor(255, 255, 255)
         love.graphics.draw(images.title, 0, 0)
     elseif mode == "menu" then
         love.graphics.setColor(0, 0, 255)
