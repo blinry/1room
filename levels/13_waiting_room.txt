@@ -1,0 +1,19 @@
+ # # # # v # #
+#. . . . . . .#
+   #
+#.# #. . . . .#
+   #
+#. . . . . . .#
+ # #
+    #. . . . .#
+     ^ # # # #
+---
+3 couch
+5 table
+---
+This hospital needs a waiting room.
+Until you're done, the patients
+have to wait outside in the cold :(
+I hope we'll get all the tables...
+---
+Ah, finally! *a-choooo!*
