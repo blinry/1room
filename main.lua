@@ -11,6 +11,9 @@ tilesize = 16 -- what is the length of a tile in game pixels?
 function love.load()
     boringLoad() -- see helpers.lua
 
+    --music.blip_stream:setVolume(0.5)
+    --soundtrack = love.audio.play(music.blip_stream)
+
     setScale(4)
 
     love.graphics.setFont(fonts.m5x7[16])
