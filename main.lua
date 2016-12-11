@@ -162,6 +162,7 @@ function love.draw()
         else
             love.graphics.setColor(255, 255, 255)
         end
+
         love.graphics.print(room.name, 16, 8)
 
         if room.story[1] ~= nil then
