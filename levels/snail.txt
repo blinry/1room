@@ -16,5 +16,17 @@
       >. . . . .#
        # # # # #
 ---
-4 bed
-2 armchair
+10 shelf
+1 desk
+1 officechair
+1 couch
+1 table
+5 plant
+1 bed
+---
+This snail got ALOT of books...
+So it needed a bigger appartment
+You know all this furniture,
+so hurry a bit, I don't like snails!
+---
+Great! Let's leave some salt for her
