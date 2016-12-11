@@ -7,3 +7,18 @@
  ^ ^ 
 ---
 1 bed
+---
+Welcome to your new job!
+Your task is to place furniture 
+in our costumer's rooms.
+First, place a bed here.
+A quick look at the rules...
+Beds need to be reachable 
+from all doors.
+Objects can be rotated 
+with right click.
+Drag them to the desired position.
+Make sure not to block the doors...
+Not quite easy, hmm.
+---
+Wow, faster then I thought.

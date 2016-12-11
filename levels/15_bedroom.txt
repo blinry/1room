@@ -8,6 +8,13 @@
 #. . . .#
  # ^ # #
 ---
-1 bed
 2 shelf
 2 plant
+1 bed
+---
+Oh, a small bedroom.
+I actually feel like a nap.
+You now all these objects...
+So I will rest a bit.
+---
+Uhh, I wanted to sleep more.

@@ -528,63 +528,97 @@ function pathTo(fromX, fromY, toX, toY)
     return true
 end
 
+-- direction: 0 top, 1 right, 2 bottom, 3 left
+function noWall(x,y,direction)
+    local hiddenByWall = false
+        --print("direction: "..direction)
+        if direction == 0 then
+            --print("aber wieso denn nicht")
+            top = room.horizontal[x][y]
+            if top == "window" or top == "wall" or top == "door_top" or top == "door_bottom" or top == "door_left" or top == "door_right" then 
+                hiddenByWall = true
+            end
+        elseif direction == 1 then
+            right = room.vertical[x+1][y]
+            if right == "window" or right == "wall" or right == "door_top" or right == "door_bottom" or right == "door_left" or right == "door_right" then 
+                hiddenByWall = true
+            end
+        elseif direction == 2 then
+            bottom = room.horizontal[x][y+1]
+            if bottom == "window" or bottom == "wall" or bottom == "door_top" or bottom == "door_bottom" or bottom == "door_left" or bottom == "door_right" then 
+                hiddenByWall = true
+            end
+        elseif direction == 3 then
+            left = room.vertical[x][y]
+            if left == "window" or left == "wall" or left == "door_top" or left == "door_bottom" or left == "door_left" or left == "door_right" then 
+                hiddenByWall = true
+            end
+        end
+    if hiddenByWall then return false end
+    return true
+end
+
 function allowed(object)
     local ox = round(object.x)
     local oy = round(object.y)
 
     if object.what == "armchair" then
-        if not (object.r == 1 and isInTable(allVisibleX, allVisibleY, ox+1, oy)
-                or object.r == 2 and isInTable(allVisibleX, allVisibleY, ox, oy+1)
-                or object.r == 3 and isInTable(allVisibleX, allVisibleY, ox-1, oy)
-                or object.r == 0 and isInTable(allVisibleX, allVisibleY, ox, oy-1)) then
+        local r = object.r
+        if not (object.r == 1 and isInTable(allVisibleX, allVisibleY, ox+1, oy) and noWall(ox,oy,r)
+                or object.r == 2 and isInTable(allVisibleX, allVisibleY, ox, oy+1) and noWall(ox,oy,r)
+                or object.r == 3 and isInTable(allVisibleX, allVisibleY, ox-1, oy) and noWall(ox,oy,r)
+                or object.r == 0 and isInTable(allVisibleX, allVisibleY, ox, oy-1) and noWall(ox,oy,r) ) then
                 table.insert(object.errorStr,"Armchair needs to be accessible from the front.")
             return false
         end
 
-    elseif object.what == "shelf" then
-        if not (object.r == 0 and (isInTable(allVisibleX, allVisibleY, ox, oy-1) and isInTable(allVisibleX, allVisibleY, ox+1, oy-1))
-                or object.r == 1 and (isInTable(allVisibleX, allVisibleY, ox+1, oy) and isInTable(allVisibleX, allVisibleY, ox+1, oy+1))
-                or object.r == 2 and (isInTable(allVisibleX, allVisibleY, ox, oy+1) and isInTable(allVisibleX, allVisibleY, ox-1, oy+1))
-                or object.r == 3 and (isInTable(allVisibleX, allVisibleY, ox-1, oy) and isInTable(allVisibleX, allVisibleY, ox-1, oy-1))) then
-                table.insert(object.errorStr,"The shelf's whole front needs to be accessible.")
-            return false
-        end
     elseif object.what == "couch" then
-        if not (object.r == 0 and (isInTable(allVisibleX, allVisibleY, ox, oy-1) and isInTable(allVisibleX, allVisibleY, ox+1, oy-1))
-                or object.r == 1 and (isInTable(allVisibleX, allVisibleY, ox+1, oy) and isInTable(allVisibleX, allVisibleY, ox+1, oy+1))
-                or object.r == 2 and (isInTable(allVisibleX, allVisibleY, ox, oy+1) and isInTable(allVisibleX, allVisibleY, ox-1, oy+1))
-                or object.r == 3 and (isInTable(allVisibleX, allVisibleY, ox-1, oy) and isInTable(allVisibleX, allVisibleY, ox-1, oy-1))) then
-                table.insert(object.errorStr,"The couch's whole front needs to be accessible.")
+        local r = object.r
+        if not (object.r == 0 and (isInTable(allVisibleX, allVisibleY, ox, oy-1) and noWall(ox,oy,r) and isInTable(allVisibleX, allVisibleY, ox+1, oy-1) and noWall(ox+1,oy,r))
+                or object.r == 1 and (isInTable(allVisibleX, allVisibleY, ox+1, oy) and noWall(ox,oy,r) and isInTable(allVisibleX, allVisibleY, ox+1, oy+1) and noWall(ox,oy+1,r))
+                or object.r == 2 and (isInTable(allVisibleX, allVisibleY, ox, oy+1) and noWall(ox,oy,r) and isInTable(allVisibleX, allVisibleY, ox-1, oy+1) and noWall(ox-1,oy,r))
+                or object.r == 3 and (isInTable(allVisibleX, allVisibleY, ox-1, oy) and noWall(ox,oy,r) and isInTable(allVisibleX, allVisibleY, ox-1, oy-1) and noWall(ox,oy-1,r))) then
+                table.insert(object.errorStr,"The "..object.what.."'s whole front needs to be accessible.")
+        end
+    elseif object.what == "shelf" then
+        local r = object.r
+        if not (object.r == 0 and (isInTable(allVisibleX, allVisibleY, ox, oy-1) and noWall(ox,oy,r) and isInTable(allVisibleX, allVisibleY, ox+1, oy-1) and noWall(ox+1,oy,r))
+                or object.r == 1 and (isInTable(allVisibleX, allVisibleY, ox+1, oy) and noWall(ox,oy,r) and isInTable(allVisibleX, allVisibleY, ox+1, oy+1) and noWall(ox,oy+1,r))
+                or object.r == 2 and (isInTable(allVisibleX, allVisibleY, ox, oy+1) and noWall(ox,oy,r) and isInTable(allVisibleX, allVisibleY, ox-1, oy+1) and noWall(ox-1,oy,r))
+                or object.r == 3 and (isInTable(allVisibleX, allVisibleY, ox-1, oy) and noWall(ox,oy,r) and isInTable(allVisibleX, allVisibleY, ox-1, oy-1) and noWall(ox,oy-1,r))) then
+                table.insert(object.errorStr,"The "..object.what.."'s whole front needs to be accessible.")
             return false
         end
     elseif object.what == "officechair" then
-        if not (isInTable(allVisibleX, allVisibleY, ox+1,oy) or isInTable(allVisibleX, allVisibleY, ox-1, oy) or isInTable(allVisibleX, allVisibleY, ox, oy+1)  or isInTable(allVisibleX, allVisibleY, ox,oy-1)) then
+        local r = object.r
+        if not (isInTable(allVisibleX, allVisibleY, ox+1,oy) and noWall(ox,oy,1) or isInTable(allVisibleX, allVisibleY, ox-1, oy) and noWall(ox,oy,3) or isInTable(allVisibleX, allVisibleY, ox, oy+1) and noWall(ox,oy,2)  or isInTable(allVisibleX, allVisibleY, ox,oy-1) and noWall(ox,oy,0)) then
             table.insert(object.errorStr, "Office chair needs to be accessible.")
             return false
         end
     elseif object.what == "table" then
+        local r = object.r
         local ok = false
         what = occupied(ox+1,oy)
         if what then
-          if what[1].what == "couch" and what[1].r ~= 1 then
-             ok = true
+          if what[1].what == "couch" and what[1].r ~= 1 and noWall(ox,oy,1) then
+             ok = true 
           end
         end
         what = occupied(ox-1,oy)
         if what then
-          if what[1].what == "couch" and what[1].r ~= 3 then
+          if what[1].what == "couch" and what[1].r ~= 3 and noWall(ox,oy,3) then
             ok = true
           end
         end
         what = occupied(ox,oy+1)
         if what then
-          if what[1].what == "couch" and what[1].r ~= 0 then
+          if what[1].what == "couch" and what[1].r ~= 0 and noWall(ox,oy,2) then
             ok = true
           end
         end
         what = occupied(ox,oy-1)
         if what then
-          if what[1].what == "couch" and what[1].r ~= 2 then
+          if what[1].what == "couch" and what[1].r ~= 2 and noWall(ox,oy,0) then
             ok = true
           end
         end
@@ -593,18 +627,19 @@ function allowed(object)
         end
         return ok
     elseif object.what == "desk" then
+        local r = object.r
         local ok = false
         if object.r == 0 then
           what = occupied(ox,oy-1)
           if what then
-            if what[1].what == "officechair" then
+            if what[1].what == "officechair" and noWall(ox,oy,r) then
              ok = true 
             end
           end
 
           what = occupied(ox+1, oy-1)
           if what then
-            if what[1].what == "officechair" then
+            if what[1].what == "officechair" and noWall(ox+1,oy,r) then
               ok = true 
             end
           end
@@ -612,14 +647,14 @@ function allowed(object)
         elseif object.r == 1 then
           what = occupied(ox+1,oy)
           if what then
-            if what[1].what == "officechair" then
+            if what[1].what == "officechair" and noWall(ox,oy,r) then
              ok = true 
             end
           end
          
           what = occupied(ox+1, oy+1)
           if what then
-            if what[1].what == "officechair" then
+            if what[1].what == "officechair" and noWall(ox,oy+1,r) then
               ok = true 
             end
           end
@@ -627,14 +662,14 @@ function allowed(object)
         elseif object.r == 2 then
           what = occupied(ox,oy+1)
           if what then
-            if what[1].what == "officechair" then
+            if what[1].what == "officechair" and noWall(ox,oy,r) then
              ok = true 
             end
           end
 
           what = occupied(ox-1, oy+1)
           if what then
-            if what[1].what == "officechair" then
+            if what[1].what == "officechair" and noWall(ox-1,oy,r) then
               ok = true 
             end
           end
@@ -642,14 +677,14 @@ function allowed(object)
         elseif object.r == 3 then
           what = occupied(ox-1,oy)
           if what then
-            if what[1].what == "officechair" then
+            if what[1].what == "officechair" and noWall(ox,oy,r) then 
              ok = true 
             end
           end
 
           what = occupied(ox-1, oy-1)
           if what then
-            if what[1].what == "officechair" then
+            if what[1].what == "officechair" and noWall(ox,oy-1,r) then 
               ok = true 
             end
           end
@@ -658,11 +693,12 @@ function allowed(object)
             table.insert(object.errorStr, "An officechair needs to be in front of a desk.")
         end
         return ok
+
     elseif object.what == "bed" then
-        if not ( object.r == 0 and (isInTable(allVisibleX, allVisibleY, ox, oy-1) or isInTable(allVisibleX, allVisibleY, ox+1, oy-1) or isInTable(allVisibleX, allVisibleY, ox, oy+2) or isInTable(allVisibleX, allVisibleY, ox+1, oy+2) or isInTable(allVisibleX, allVisibleY, ox-1, oy) or isInTable(allVisibleX, allVisibleY, ox-1, oy+1) or isInTable(allVisibleX, allVisibleY, ox+2, oy) or isInTable(allVisibleX, allVisibleY, ox+2, oy+1))
-                 or object.r == 1 and (isInTable(allVisibleX, allVisibleY, ox+1, oy) or isInTable(allVisibleX, allVisibleY, ox+1, oy+1) or isInTable(allVisibleX, allVisibleY, ox-2, oy) or isInTable(allVisibleX, allVisibleY, ox-2, oy+1) or isInTable(allVisibleX, allVisibleY, ox, oy-1) or isInTable(allVisibleX, allVisibleY, ox-1, oy-1) or isInTable(allVisibleX, allVisibleY, ox, oy+2) or isInTable(allVisibleX, allVisibleY, ox-1, oy+2))
-                 or object.r == 2 and (isInTable(allVisibleX, allVisibleY, ox, oy+1) or isInTable(allVisibleX, allVisibleY, ox-1, oy+1) or isInTable(allVisibleX, allVisibleY, ox, oy-2) or isInTable(allVisibleX, allVisibleY, ox-1, oy-2) or isInTable(allVisibleX, allVisibleY, ox-2, oy) or isInTable(allVisibleX, allVisibleY, ox-2, oy-1) or isInTable(allVisibleX, allVisibleY, ox+1, oy) or isInTable(allVisibleX, allVisibleY, ox+1, oy-1))
-                 or object.r == 3 and (isInTable(allVisibleX, allVisibleY, ox-1, oy) or isInTable(allVisibleX, allVisibleY, ox-1, oy-1) or isInTable(allVisibleX, allVisibleY, ox+2, oy) or isInTable(allVisibleX, allVisibleY, ox+2, oy-1) or isInTable(allVisibleX, allVisibleY, ox, oy+1) or isInTable(allVisibleX, allVisibleY, ox+1, oy+1) or isInTable(allVisibleX, allVisibleY, ox, oy-2) or isInTable(allVisibleX, allVisibleY, ox+1, oy-2))) then
+        if not ( object.r == 0 and ( isInTable(allVisibleX, allVisibleY, ox, oy-1) and noWall(ox,oy,0) or isInTable(allVisibleX, allVisibleY, ox+1, oy-1) and noWall(ox+1,oy,0) or isInTable(allVisibleX, allVisibleY, ox, oy+2) and noWall(ox,oy+1,2) or isInTable(allVisibleX, allVisibleY, ox+1, oy+2) and noWall(ox+1,oy+1,2) or isInTable(allVisibleX, allVisibleY, ox-1, oy) and noWall(ox,oy,3) or isInTable(allVisibleX, allVisibleY, ox-1, oy+1) and noWall(ox,oy+1,3) or isInTable(allVisibleX, allVisibleY, ox+2, oy) and noWall(ox+1,oy,1) or isInTable(allVisibleX, allVisibleY, ox+2, oy+1) and noWall(ox+1,oy+1,1))
+                 or object.r == 1 and (isInTable(allVisibleX, allVisibleY, ox+1, oy) and noWall(ox,oy,1) or isInTable(allVisibleX, allVisibleY, ox+1, oy+1) and noWall(ox,oy+1,1) or isInTable(allVisibleX, allVisibleY, ox-2, oy) and noWall(ox-1,oy,3) or isInTable(allVisibleX, allVisibleY, ox-2, oy+1) and noWall(ox-1,oy+1,3) or isInTable(allVisibleX, allVisibleY, ox, oy-1) and noWall(ox,oy,0) or isInTable(allVisibleX, allVisibleY, ox-1, oy-1) and noWall(ox-1,oy,0) or isInTable(allVisibleX, allVisibleY, ox, oy+2) and noWall(ox,oy+1,2) or isInTable(allVisibleX, allVisibleY, ox-1, oy+2) and noWall(ox-1,oy+1,2))
+                 or object.r == 2 and (isInTable(allVisibleX, allVisibleY, ox, oy+1) and noWall(ox,oy,2) or isInTable(allVisibleX, allVisibleY, ox-1, oy+1) and noWall(ox-1,oy,2) or isInTable(allVisibleX, allVisibleY, ox, oy-2) and noWall(ox,oy-1,0) or isInTable(allVisibleX, allVisibleY, ox-1, oy-2) and noWall(ox-1,oy-1,0) or isInTable(allVisibleX, allVisibleY, ox-2, oy) and noWall(ox-1,oy,3) or isInTable(allVisibleX, allVisibleY, ox-2, oy-1) and noWall(ox-1,oy-1,3) or isInTable(allVisibleX, allVisibleY, ox+1, oy) and noWall(ox,oy,1) or isInTable(allVisibleX, allVisibleY, ox+1, oy-1) and noWall(ox,oy-1,1))
+                 or object.r == 3 and (isInTable(allVisibleX, allVisibleY, ox-1, oy) and noWall(ox,oy,3) or isInTable(allVisibleX, allVisibleY, ox-1, oy-1) and noWall(ox,oy-1,3) or isInTable(allVisibleX, allVisibleY, ox+2, oy) and noWall(ox+1,oy,1) or isInTable(allVisibleX, allVisibleY, ox+2, oy-1) and noWall(ox+1,oy-1,1) or isInTable(allVisibleX, allVisibleY, ox, oy+1) and noWall(ox,oy,2) or isInTable(allVisibleX, allVisibleY, ox+1, oy+1) and noWall(ox+1,oy,2) or isInTable(allVisibleX, allVisibleY, ox, oy-2) and noWall(ox,oy-1,0) or isInTable(allVisibleX, allVisibleY, ox+1, oy-2) and noWall(ox+1,oy-1,0))) then
             table.insert(object.errorStr, "Bed needs to be accessible.")
             return false
         end

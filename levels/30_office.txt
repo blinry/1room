@@ -13,3 +13,15 @@
 6 desk
 2 officechair
 3 plant
+---
+Oh, I think you have not used
+a desk and an office chair before.
+I mean you are not working 
+in an office.
+Each desk needs to have an 
+officechair on its front.
+Wait...
+Here we have only 2 officechairs
+but 6 desks...?
+---
+Nice, not working here...

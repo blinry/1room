@@ -10,3 +10,13 @@
 ---
 3 shelf
 2 plant
+---
+Oh, it's a small library.
+They even have windows here.
+Elegant.
+Let's not block them with
+these big bookshelves, ok?
+Ah, and make sure the books
+are easily accessible.
+---
+No time to read now!
