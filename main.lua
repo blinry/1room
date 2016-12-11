@@ -20,7 +20,9 @@ function love.load()
 
     rooms = {}
     for i,filename in pairs(love.filesystem.getDirectoryItems("levels")) do
-        table.insert(rooms, parseRoom("levels/"..filename))
+        if string.match(filename, ".txt$") then
+            table.insert(rooms, parseRoom("levels/"..filename))
+        end
     end
 
     mode = "title"
