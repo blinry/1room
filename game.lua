@@ -433,7 +433,7 @@ function allowed(object)
         end
     elseif object.what == "officechair" then
         if not (isInTable(allVisibleX, allVisibleY, ox+1,oy) or isInTable(allVisibleX, allVisibleY, ox-1, oy) or isInTable(allVisibleX, allVisibleY, ox, oy+1)  or isInTable(allVisibleX, allVisibleY, ox,oy-1)) then
-            table.insert("Office chair needs to be accessible.")
+            table.insert(object.errorStr, "Office chair needs to be accessible.")
             return false
         end
     elseif object.what == "table" then
@@ -463,6 +463,69 @@ function allowed(object)
         end
         if not ok then
             table.insert(object.errorStr, "Table needs to be in front or next to a couch.")
+        end
+        return ok
+    elseif object.what == "desk" then
+        ok = false
+        if object.r == 0 then
+          what = occupied(ox,oy-1)
+          if what then
+            if what[1].what == "officechair" then
+             ok = true 
+            end
+          else
+            what = occupied(ox+1, oy-1)
+            if what then
+              if what[1].what == "officechair" then
+                ok = true 
+              end
+            end
+          end
+        elseif object.r == 1 then
+          what = occupied(ox+1,oy)
+          if what then
+            if what[1].what == "officechair" then
+             ok = true 
+            end
+          else
+            what = occupied(ox+1, oy+1)
+            if what then
+              if what[1].what == "officechair" then
+                ok = true 
+              end
+            end
+          end
+        elseif object.r == 2 then
+          what = occupied(ox,oy+1)
+          if what then
+            if what[1].what == "officechair" then
+             ok = true 
+            end
+          else
+            what = occupied(ox-1, oy+1)
+            if what then
+              if what[1].what == "officechair" then
+                ok = true 
+              end
+            end
+          end
+        elseif object.r == 3 then
+          what = occupied(ox-1,oy)
+          if what then
+            if what[1].what == "officechair" then
+             ok = true 
+            end
+          else
+            what = occupied(ox-1, oy-1)
+            if what then
+              if what[1].what == "officechair" then
+                ok = true 
+              end
+            end
+          end
+        end
+        if not ok then
+            table.insert(object.errorStr, "An officechair needs to be in front of a desk.")
         end
         return ok
     elseif object.what == "bed" then
