@@ -219,7 +219,7 @@ function love.draw()
         love.graphics.setColor(91, 110, 225)
         love.graphics.printf("SELECT A LEVEL", 0, 8, 320, "center")
 
-        love.graphics.setColor(100, 100, 100)
+        love.graphics.setColor(50, 50, 50)
         love.graphics.setFont(fonts.m3x6[16])
         love.graphics.printf("Music: \"Welcome!\" by RoccoW, cc-by-sa 4.0, http://freemusicarchive.org/music/RoccoW/_1035/", 0, 145, 320, "center")
         love.graphics.setFont(fonts.m5x7[16])
