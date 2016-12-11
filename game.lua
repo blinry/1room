@@ -76,7 +76,7 @@ function parseRoom(filename)
         amount, what = string.match(line, "([0-9]+) (.+)")
 
         for j = 1, tonumber(amount) do
-            table.insert(room.objects, {what = what, x = x, y = y, r = 2, errorStr = {}})
+            table.insert(room.objects, {what = what, x = x, y = y, r = 2, errorStr = {}, allX = {}, allY = {}, wallHorX = {}, wallHorY = {}, wallVerX = {}, wallVerY = {} })
         end
 
         y = y+2
@@ -105,6 +105,66 @@ function parseRoom(filename)
     end
 
     return room
+end
+
+function expandObject(obj)
+    obj.x = round(obj.x)
+    obj.y = round(obj.y)
+    obj.allX = {} obj.allY = {} obj.wallHorX = {} obj.wallHorY = {} obj.wallVerX = {} obj.wallVerY = {}
+    table.insert(obj.allX, obj.x) table.insert(obj.allY, obj.y)
+    if obj.what == "bed" then
+        if obj.r == 0 then
+            table.insert(obj.allX, obj.x) table.insert(obj.allX, obj.x+1) table.insert(obj.allX, obj.x+1)
+            table.insert(obj.allY, obj.y+1) table.insert(obj.allY, obj.y) table.insert(obj.allY, obj.y+1)
+            table.insert(obj.wallHorX, obj.x) table.insert(obj.wallHorX, obj.x+1)
+            table.insert(obj.wallHorY, obj.y+1) table.insert(obj.wallHorY, obj.y+1)
+            table.insert(obj.wallVerX, obj.x+1) table.insert(obj.wallVerX, obj.x+1)
+            table.insert(obj.wallVerY, obj.y) table.insert(obj.wallVerY, obj.y+1)
+        elseif obj.r == 1 then
+            table.insert(obj.allX, obj.x) table.insert(obj.allX, obj.x-1) table.insert(obj.allX, obj.x-1)
+            table.insert(obj.allY, obj.y+1) table.insert(obj.allY, obj.y) table.insert(obj.allY, obj.y+1)
+            table.insert(obj.wallHorX, obj.x) table.insert(obj.wallHorX, obj.x-1)
+            table.insert(obj.wallHorY, obj.y+1) table.insert(obj.wallHorY, obj.y+1)
+            table.insert(obj.wallVerX, obj.x) table.insert(obj.wallVerX, obj.x)
+            table.insert(obj.wallVerY, obj.y) table.insert(obj.wallVerY, obj.y+1)
+        elseif obj.r == 2 then
+            table.insert(obj.allX, obj.x) table.insert(obj.allX, obj.x-1) table.insert(obj.allX, obj.x-1)
+            table.insert(obj.allY, obj.y-1) table.insert(obj.allY, obj.y) table.insert(obj.allY, obj.y-1)
+            table.insert(obj.wallHorX, obj.x) table.insert(obj.wallHorX, obj.x-1)
+            table.insert(obj.wallHorY, obj.y) table.insert(obj.wallHorY, obj.y)
+            table.insert(obj.wallVerX, obj.x) table.insert(obj.wallVerX, obj.x)
+            table.insert(obj.wallVerY, obj.y) table.insert(obj.wallVerY, obj.y-1)
+        elseif obj.r == 3 then
+            table.insert(obj.allX, obj.x) table.insert(obj.allX, obj.x+1) table.insert(obj.allX, obj.x+1)
+            table.insert(obj.allY, obj.y-1) table.insert(obj.allY, obj.y) table.insert(obj.allY, obj.y-1)
+            table.insert(obj.wallHorX, obj.x) table.insert(obj.wallHorX, obj.x+1)
+            table.insert(obj.wallHorY, obj.y) table.insert(obj.wallHorY, obj.y)
+            table.insert(obj.wallVerX, obj.x+1) table.insert(obj.wallVerX, obj.x+1)
+            table.insert(obj.wallVerY, obj.y) table.insert(obj.wallVerY, obj.y-1)
+        end
+    elseif obj.what == "shelf" or obj.what == "couch" or obj.what == "desk" then
+        if obj.r == 0 then
+            table.insert(obj.allX, obj.x+1);
+            table.insert(obj.allY, obj.y);
+            table.insert(obj.wallVerX, obj.x+1);
+            table.insert(obj.wallVerY, obj.y);
+        elseif obj.r == 1 then
+            table.insert(obj.allX, obj.x);
+            table.insert(obj.allY, obj.y+1);
+            table.insert(obj.wallHorX, obj.x);
+            table.insert(obj.wallHorY, obj.y+1);
+        elseif obj.r == 2 then
+            table.insert(obj.allX, obj.x-1);
+            table.insert(obj.allY, obj.y);
+            table.insert(obj.wallVerX, obj.x);
+            table.insert(obj.wallVerY, obj.y);
+        elseif obj.r == 3 then
+            table.insert(obj.allX, obj.x);
+            table.insert(obj.allY, obj.y-1);
+            table.insert(obj.wallHorX, obj.x);
+            table.insert(obj.wallHorY, obj.y);
+        end
+    end
 end
 
 function loadRoom(i)
@@ -341,7 +401,13 @@ function checkRules()
             solved = false
             objects[i].dirty = false
         end
+        if objects[i].x < 1 or objects[i].y < 1 then
+            objects[i].dirty = true
+            table.insert(objects[i].errorStr, "All objects must be inside of the room.")
+        end
     end
+    
+    wallypied()
 
     y = 0
     for x = 0,99 do
@@ -603,6 +669,40 @@ function windowypied(x, y)
     return true
   end
   return false
+end
+
+function wallypied()
+    for i = 1, #objects do
+        expandObject(objects[i])
+        local isWallypied = false
+            --table.insert(objects[i].errorStr, "WOOT "..#objects[i].wallHorX.." "..#objects[i].wallHorY)
+        for j = 1, #objects[i].wallHorX do
+            local xi = objects[i].wallHorX[j]
+            local yi = objects[i].wallHorY[j]
+            if xi < 1 or yi < 1 then isWallypied = true break end
+            --print(xi.." "..yi.."")
+            local top = room.horizontal[xi][yi] 
+            if top == "wall" or top == "window" or top == "door" then
+                isWallypied = true
+                break
+            end
+        end
+        for j = 1, #objects[i].wallVerX do
+            local xi = objects[i].wallVerX[j]
+            local yi = objects[i].wallVerY[j]
+            if xi < 1 or yi < 1 then isWallypied = true break end
+            --print(xi.." "..yi.."")
+            local left = room.vertical[xi][yi]
+            if left == "wall" or left == "window" or left == "door" then
+                isWallypied = true
+                break
+            end
+        end
+        if isWallypied then
+            objects[i].dirty = true
+            table.insert(objects[i].errorStr, "Objects cannot go through walls, windows nor doors")
+        end
+    end
 end
 
 function occupied(x, y)

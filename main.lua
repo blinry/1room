@@ -70,12 +70,15 @@ end
 
 function love.mousepressed(x, y, button, touch)
     if mode == "game" then
-        if room.story[2] ~= nil then
-          love.graphics.print(room.story[2], 200, 160)
-          table.remove(room.story, 1)
-        end
+
         tx = math.floor(x/scale/tilesize)
         ty = math.floor(y/scale/tilesize)-1
+
+        if x/scale >= 106 and x/scale <= 306 and y/scale >= 5 and y/scale <= 25 then
+          if room.story[2] ~= nil then
+            table.remove(room.story, 1)
+          end
+        end
 
         if button == 1 then
             what = occupied(tx, ty)
@@ -147,6 +150,11 @@ function love.draw()
             love.graphics.setColor(0, 200, 0)
             room.story = {}
             if room.won[1] ~= nil then
+	      love.graphics.setColor(44, 44, 200)
+              love.graphics.rectangle("fill", 106, 5, 200, 20)
+	      love.graphics.setColor(0, 0, 0)
+              love.graphics.polygon("fill", 295,18, 305, 18, 300, 23) 
+              love.graphics.setColor(255, 255, 255)
               love.graphics.print(room.won[1], 116, 8)
             end
         else
@@ -155,6 +163,11 @@ function love.draw()
         love.graphics.print(room.name, 16, 8)
 
         if room.story[1] ~= nil then
+	  love.graphics.setColor(44, 44, 200)
+          love.graphics.rectangle("fill", 106, 5, 200, 20)
+	  love.graphics.setColor(0, 0, 0)
+          love.graphics.polygon("fill", 295,18, 305, 18, 300, 23) 
+          love.graphics.setColor(255, 255, 255)
           love.graphics.print(room.story[1], 116, 8)
         end
 
