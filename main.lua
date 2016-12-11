@@ -152,8 +152,10 @@ function love.draw()
             if room.won[1] ~= nil then
 	      love.graphics.setColor(44, 44, 200)
               love.graphics.rectangle("fill", 106, 5, 200, 20)
-	      love.graphics.setColor(0, 0, 0)
-              love.graphics.polygon("fill", 295,18, 305, 18, 300, 23) 
+              if room.won[2] ~= nil then
+	        love.graphics.setColor(0, 0, 0)
+                love.graphics.polygon("fill", 295,18, 305, 18, 300, 23) 
+              end
               love.graphics.setColor(255, 255, 255)
               love.graphics.print(room.won[1], 116, 8)
             end
@@ -165,8 +167,10 @@ function love.draw()
         if room.story[1] ~= nil then
 	  love.graphics.setColor(44, 44, 200)
           love.graphics.rectangle("fill", 106, 5, 200, 20)
-	  love.graphics.setColor(0, 0, 0)
-          love.graphics.polygon("fill", 295,18, 305, 18, 300, 23) 
+          if room.story[2] ~= nil then
+	    love.graphics.setColor(0, 0, 0)
+            love.graphics.polygon("fill", 295,18, 305, 18, 300, 23) 
+          end
           love.graphics.setColor(255, 255, 255)
           love.graphics.print(room.story[1], 116, 8)
         end

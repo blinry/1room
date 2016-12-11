@@ -1,4 +1,4 @@
- # # # # V V # # # 
+ # # # # v v # # # 
 #. . . . . . . . .# 
          ===
 #. . . .#   #. . .# 
@@ -21,7 +21,7 @@
 2 desk
 1 bed
 ---
-story text
-more text
+What a nice appartment!
+Let's place the furniture.
 ---
-won text
+Looks nice!
