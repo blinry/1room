@@ -36,9 +36,12 @@ function love.keypressed(key)
         -- love.timer.sleep(0.1)
         if mode == "game" then
             mode = "menu"
+            love.audio.play(sounds.back)
         elseif mode == "menu" then
             mode = "title"
+            love.audio.play(sounds.back)
         elseif mode == "title" then
+            love.audio.play(sounds.back)
             love.event.quit()
         end
     elseif key == "1" then
@@ -95,6 +98,7 @@ function love.mousepressed(x, y, button, touch)
             if menuIndex() then
                 loadRoom(menuIndex())
                 mode = "game"
+                love.audio.play(sounds.menu)
             end
         end
     end
