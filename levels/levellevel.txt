@@ -16,17 +16,17 @@
     #. . . . . .=
      # # # # # #
 ---
-5 shelf
+6 shelf
 2 desk
 2 officechair
 2 couch
-5 plant
+6 plant
 2 armchair
 ---
 Too much things...
 Does noone consider that we
 will have to carry all of it..?
-The shelves look so have...
+The shelves look so heavy...
 I hurt my back
 so I cannot help you.
 Sorry.
