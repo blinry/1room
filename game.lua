@@ -62,7 +62,7 @@ function parseRoom(filename)
     end
 
     room.objects = {}
-    local x = 12
+    local x = 18
     local y = 1
     while true do
         local line = f:read()
@@ -74,13 +74,13 @@ function parseRoom(filename)
         amount, what = string.match(line, "([0-9]+) (.+)")
 
         for j = 1, tonumber(amount) do
-            table.insert(room.objects, {what = what, x = x, y = y, r = 1, errorStr = {}})
+            table.insert(room.objects, {what = what, x = x, y = y, r = 2, errorStr = {}})
         end
 
-        x = x+2
-        if x > 18 then
-            x = 12
-            y = y+3
+        y = y+2
+        if y > 7 then
+            y = 1
+            x = x-4
         end
     end
 
@@ -285,6 +285,7 @@ end
 
 
 function checkRules()
+    local solved = true
     -- nopeText = ""
 
     local accessibleX = {}
@@ -321,10 +322,15 @@ function checkRules()
 
     for i=1,#objects do
         objects[i].errorStr = {}
-        objects[i].dirty = not allowed(objects[i])
+        if objects[i].x < 12 then
+            objects[i].dirty = not allowed(objects[i])
+        else
+            solved = false
+            objects[i].dirty = false
+        end
     end
 
-    for x = 1,100 do
+    for x = 1,12 do
         for y = 1,99 do
             what = occupied(x,y)
             if what then
@@ -360,7 +366,6 @@ function checkRules()
         end
     end
 
-    local solved = true
     for i=1,#objects do
         local n = objects[i].errorStr
         if #n > 0 then

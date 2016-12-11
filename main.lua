@@ -131,13 +131,19 @@ function love.draw()
         else
             love.graphics.setColor(255, 255, 255)
         end
-        love.graphics.printf(room.name, 0, 8, 320, "center")
+        love.graphics.print(room.name, 16, 8)
 
         love.graphics.translate(0, 16)
 
         drawRoom()
         for i = 1, #objects do
             drawObject(objects[i])
+
+            local w = occupied(objects[i].x,objects[i].y)
+            if w and #w > 1 then
+                love.graphics.setColor(255, 255, 255)
+                love.graphics.print("x"..#w, (objects[i].x+1)*tilesize+2, objects[i].y*tilesize)
+            end
         end
         --drawDebug()
 
