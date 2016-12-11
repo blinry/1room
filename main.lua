@@ -69,16 +69,19 @@ function love.mousepressed(x, y, button, touch)
             what = occupied(tx, ty)
             if what then
                 holding = what[1]
+                love.audio.play(sounds.pickup)
             end
         end
         if button == 2 then
             if holding then
                 holding.r = (holding.r + 1) % 4
+                love.audio.play(sounds.rotate)
             else
                 what = occupied(tx, ty)
                 if what then
                     for i=1,#what do
-                      what[1].r = (what[1].r + 1) % 4
+                        what[1].r = (what[1].r + 1) % 4
+                        love.audio.play(sounds.rotate)
                     end
                 end
             end
@@ -104,6 +107,7 @@ function love.mousereleased(x, y, button, touch)
                 holding.x = round(holding.x)
                 holding.y = round(holding.y)
                 holding = nil
+                love.audio.play(sounds.drop)
             end
         end
 
