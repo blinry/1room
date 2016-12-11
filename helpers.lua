@@ -76,6 +76,7 @@ function boringLoad()
     for i,filename in pairs(love.filesystem.getDirectoryItems("fonts")) do
         fonts[filename:sub(1,-5)] = {}
         fonts[filename:sub(1,-5)][16] = love.graphics.newFont("fonts/"..filename, 16)
+        fonts[filename:sub(1,-5)][32] = love.graphics.newFont("fonts/"..filename, 32)
     end
 end
 

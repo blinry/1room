@@ -16,6 +16,7 @@ function parseRoom(filename)
     room.doorX = {}
     room.doorY = {}
     room.name = string.match(string.match(filename, "[^/]+.txt"), "[^/.]+")
+    room.solved = false
 
     for i = 1,101 do
         room.floor[i] = {}
@@ -87,6 +88,7 @@ function parseRoom(filename)
 end
 
 function loadRoom(i)
+    currentRoom = i
     room = rooms[i]
     objects = room.objects
     checkRules()
@@ -357,6 +359,17 @@ function checkRules()
             end
         end
     end
+
+    local solved = true
+    for i=1,#objects do
+        local n = objects[i].errorStr
+        if #n > 0 then
+            solved = false
+        end
+    end
+    if solved then
+        room.solved = true
+    end
 end
 
 function occupies(object, x, y)
@@ -492,5 +505,16 @@ end
 function nope(text)
     if nopeText == "" then
         nopeText = text
+    end
+end
+
+function menuIndex()
+    local xx = math.floor((love.mouse.getX()/scale)/(85+16))
+    local yy = 1+math.floor((love.mouse.getY()/scale-32+4)/(23))
+    local j = (xx)*5+(yy)
+    if xx >= 0 and yy >= 1 and xx <= 2 and yy <= 5 and j >= 1 and j <= #rooms then
+        return j
+    else
+        return nil
     end
 end

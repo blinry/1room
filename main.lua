@@ -20,8 +20,7 @@ function love.load()
         table.insert(rooms, parseRoom("levels/"..filename))
     end
 
-    currentRoom = 1
-    loadRoom(currentRoom)
+    mode = "title"
 
     holding = nil
 end
@@ -35,7 +34,13 @@ function love.keypressed(key)
         -- why did we need this again?
         -- love.window.setFullscreen(false)
         -- love.timer.sleep(0.1)
-        love.event.quit()
+        if mode == "game" then
+            mode = "menu"
+        elseif mode == "menu" then
+            mode = "title"
+        elseif mode == "title" then
+            love.event.quit()
+        end
     elseif key == "1" then
         setScale(1)
     elseif key == "2" then
@@ -45,89 +50,141 @@ function love.keypressed(key)
     elseif key == "4" then
         setScale(8)
     elseif key == "left" then
-        currentRoom = 1 + (((currentRoom-2)) % #rooms)
-        loadRoom(currentRoom)
+        if mode == "game" then
+            loadRoom(1 + (((currentRoom-2)) % #rooms))
+        end
     elseif key == "right" then
-        currentRoom = 1 + (((currentRoom+0)) % #rooms)
-        loadRoom(currentRoom)
+        if mode == "game" then
+            loadRoom(1 + (((currentRoom+0)) % #rooms))
+        end
     end
 end
 
 function love.mousepressed(x, y, button, touch)
-    tx = math.floor(x/scale/tilesize)
-    ty = math.floor(y/scale/tilesize)
+    if mode == "game" then
+        tx = math.floor(x/scale/tilesize)
+        ty = math.floor(y/scale/tilesize)
 
-    if button == 1 then
-        what = occupied(tx, ty)
-        if what then
-            holding = what[1]
-        end
-    end
-    if button == 2 then
-        if holding then
-            holding.r = (holding.r + 1) % 4
-        else
+        if button == 1 then
             what = occupied(tx, ty)
             if what then
-                for i=1,#what do
-                  what[1].r = (what[1].r + 1) % 4
+                holding = what[1]
+            end
+        end
+        if button == 2 then
+            if holding then
+                holding.r = (holding.r + 1) % 4
+            else
+                what = occupied(tx, ty)
+                if what then
+                    for i=1,#what do
+                      what[1].r = (what[1].r + 1) % 4
+                    end
                 end
             end
         end
-    end
 
-    checkRules()
+        checkRules()
+    elseif mode == "title" then
+        mode = "menu"
+    elseif mode == "menu" then
+        if button == 1 then
+            if menuIndex() then
+                loadRoom(menuIndex())
+                mode = "game"
+            end
+        end
+    end
 end
 
 function love.mousereleased(x, y, button, touch)
-    if button == 1 then
-        if holding then
-            holding.x = round(holding.x)
-            holding.y = round(holding.y)
-            holding = nil
+    if mode == "game" then
+        if button == 1 then
+            if holding then
+                holding.x = round(holding.x)
+                holding.y = round(holding.y)
+                holding = nil
+            end
         end
-    end
 
-    checkRules()
+        checkRules()
+    end
 end
 
 function love.mousemoved(x, y, dx, dy, touch)
-    if holding then
-        holding.x = x/scale/tilesize-0.5
-        holding.y = y/scale/tilesize-0.5
-    end
+    if mode == "game" then
+        if holding then
+            holding.x = x/scale/tilesize-0.5
+            holding.y = y/scale/tilesize-0.5
+        end
 
-    checkRules()
+        checkRules()
+    end
 end
 
 function love.draw()
     love.graphics.scale(scale, scale)
 
-    drawRoom()
+    if mode == "game" then
+        drawRoom()
 
-    for i = 1, #objects do
-        drawObject(objects[i])
-    end
+        for i = 1, #objects do
+            drawObject(objects[i])
+        end
 
-    --drawDebug()
+        --drawDebug()
 
-    love.graphics.setColor(255, 255, 255)
-    love.graphics.print(room.name, 100, 0)
+        if room.solved then
+            love.graphics.setColor(0, 200, 0)
+        else
+            love.graphics.setColor(255, 255, 255)
+        end
+        love.graphics.printf(room.name, 0, 8, 320, "center")
 
-    love.graphics.setColor(255, 0, 0)
+        love.graphics.setColor(255, 0, 0)
 
-    tx = math.floor(round(love.mouse.getX())/scale/tilesize)
-    ty = math.floor(round(love.mouse.getY())/scale/tilesize)
-    
-    what = occupied(tx,ty)
-    
-    if what then
-      for i = 1, #what do
-        if what[i].errorStr ~= nil then
-          for j = 1, #what[i].errorStr do
-            love.graphics.print(what[i].errorStr[j], 10, 120 + 10 * i + 10 * j)
+        tx = math.floor(round(love.mouse.getX())/scale/tilesize)
+        ty = math.floor(round(love.mouse.getY())/scale/tilesize)
+
+        what = occupied(tx,ty)
+
+        if what then
+          for i = 1, #what do
+            if what[i].errorStr ~= nil then
+              for j = 1, #what[i].errorStr do
+                love.graphics.print(what[i].errorStr[j], 10, 120 + 10 * i + 10 * j)
+              end
+            end
           end
         end
-      end
+    elseif mode == "title" then
+        love.graphics.draw(images.title, 0, 0)
+    elseif mode == "menu" then
+        love.graphics.setColor(0, 0, 255)
+        love.graphics.printf("SELECT A LEVEL", 0, 8, 320, "center")
+
+        local x = 16
+        local y = 32
+        for i=1,#rooms do
+            if menuIndex() == i then
+                if rooms[i].solved then
+                    love.graphics.setColor(0, 200, 0)
+                else
+                    love.graphics.setColor(255, 255, 255)
+                end
+            else
+                if rooms[i].solved then
+                    love.graphics.setColor(0, 100, 0)
+                else
+                    love.graphics.setColor(100, 100, 100)
+                end
+            end
+            love.graphics.print(rooms[i].name, x, y)
+                y = y+23
+            if y > 140 then
+                x = x+85+16
+                y = 32
+            end
+        end
     end
 end
