@@ -613,13 +613,13 @@ function allowed(object)
         end
         what = occupied(ox,oy+1)
         if what then
-          if what[1].what == "couch" and what[1].r ~= 0 and noWall(ox,oy,2) then
+          if what[1].what == "couch" and what[1].r ~= 2 and noWall(ox,oy,2) then
             ok = true
           end
         end
         what = occupied(ox,oy-1)
         if what then
-          if what[1].what == "couch" and what[1].r ~= 2 and noWall(ox,oy,0) then
+          if what[1].what == "couch" and what[1].r ~= 0 and noWall(ox,oy,0) then
             ok = true
           end
         end
