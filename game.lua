@@ -337,14 +337,14 @@ function checkRules()
                 if (doorypied(x,y)) then
                     for i=1,#what do
                         what[i].dirty = true
-                        table.insert(what[i].errorStr,"All doors need to be accessible.")
+                        table.insert(what[i].errorStr,"Door needs to be accessible.")
                     end
                 end
                 if (windowypied(x,y)) then
                     for i=1,#what do
                         if what[i].what == "shelf" then
                             what[i].dirty = true
-                            table.insert(what[i].errorStr,"Shelves must not block windows.")
+                            table.insert(what[i].errorStr,"Shelf must not block the window.")
                         end
                     end
                 end
@@ -419,7 +419,7 @@ function allowed(object)
                 or object.r == 2 and isInTable(allVisibleX, allVisibleY, ox, oy+1)
                 or object.r == 3 and isInTable(allVisibleX, allVisibleY, ox-1, oy)
                 or object.r == 0 and isInTable(allVisibleX, allVisibleY, ox, oy-1)) then
-                table.insert(object.errorStr,"An armchair needs to be accessible from the front.")
+                table.insert(object.errorStr,"Armchair needs to be accessible from the front.")
             return false
         end
 
@@ -428,11 +428,14 @@ function allowed(object)
                 or object.r == 1 and (isInTable(allVisibleX, allVisibleY, ox+1, oy) or isInTable(allVisibleX, allVisibleY, ox+1, oy+1))
                 or object.r == 2 and (isInTable(allVisibleX, allVisibleY, ox, oy+1) or isInTable(allVisibleX, allVisibleY, ox-1, oy+1))
                 or object.r == 3 and (isInTable(allVisibleX, allVisibleY, ox-1, oy) or isInTable(allVisibleX, allVisibleY, ox-1, oy-1))) then
-                table.insert(object.errorStr,"A "..object.what.."'s front needs to be accessible.")
+                table.insert(object.errorStr,object.what.." needs to be accessible from the front.")
             return false
         end
     elseif object.what == "officechair" then
-        return isInTable(allVisibleX, allVisibleY, ox+1,oy) or isInTable(allVisibleX, allVisibleY, ox-1, oy) or isInTable(allVisibleX, allVisibleY, ox, oy+1)  or isInTable(allVisibleX, allVisibleY, ox,oy-1)  
+        if not (isInTable(allVisibleX, allVisibleY, ox+1,oy) or isInTable(allVisibleX, allVisibleY, ox-1, oy) or isInTable(allVisibleX, allVisibleY, ox, oy+1)  or isInTable(allVisibleX, allVisibleY, ox,oy-1)) then
+            table.insert("Office chair needs to be accessible.")
+            return false
+        end
     elseif object.what == "table" then
         what = occupied(ox+1,oy)
         if what then
@@ -459,7 +462,7 @@ function allowed(object)
           end
         end
         if not ok then
-            table.insert(object.errorStr, "A "..object.what.." needs to be in front or next to a couch.")
+            table.insert(object.errorStr, "Table needs to be in front or next to a couch.")
         end
         return ok
     elseif object.what == "bed" then
@@ -467,7 +470,7 @@ function allowed(object)
                  or object.r == 1 and (isInTable(allVisibleX, allVisibleY, ox+1, oy) or isInTable(allVisibleX, allVisibleY, ox+1, oy+1) or isInTable(allVisibleX, allVisibleY, ox-2, oy) or isInTable(allVisibleX, allVisibleY, ox-2, oy+1) or isInTable(allVisibleX, allVisibleY, ox, oy-1) or isInTable(allVisibleX, allVisibleY, ox-1, oy-1) or isInTable(allVisibleX, allVisibleY, ox, oy+2) or isInTable(allVisibleX, allVisibleY, ox-1, oy+2))
                  or object.r == 2 and (isInTable(allVisibleX, allVisibleY, ox, oy+1) or isInTable(allVisibleX, allVisibleY, ox-1, oy+1) or isInTable(allVisibleX, allVisibleY, ox, oy-2) or isInTable(allVisibleX, allVisibleY, ox-1, oy-2) or isInTable(allVisibleX, allVisibleY, ox-2, oy) or isInTable(allVisibleX, allVisibleY, ox-2, oy-1) or isInTable(allVisibleX, allVisibleY, ox+1, oy) or isInTable(allVisibleX, allVisibleY, ox+1, oy-1))
                  or object.r == 3 and (isInTable(allVisibleX, allVisibleY, ox-1, oy) or isInTable(allVisibleX, allVisibleY, ox-1, oy-1) or isInTable(allVisibleX, allVisibleY, ox+2, oy) or isInTable(allVisibleX, allVisibleY, ox+2, oy-1) or isInTable(allVisibleX, allVisibleY, ox, oy+1) or isInTable(allVisibleX, allVisibleY, ox+1, oy+1) or isInTable(allVisibleX, allVisibleY, ox, oy-2) or isInTable(allVisibleX, allVisibleY, ox+1, oy-2))) then
-            table.insert(object.errorStr, "A bed needs to be accessible from the side.")
+            table.insert(object.errorStr, "Bed needs to be accessible.")
             return false
         end
     end

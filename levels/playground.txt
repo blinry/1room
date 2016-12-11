@@ -19,4 +19,5 @@
 1 armchair
 1 couch
 5 plant
-1 desk
+2 desk
+2 officechair
