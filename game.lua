@@ -537,12 +537,20 @@ function allowed(object)
             return false
         end
 
-    elseif object.what == "couch" or object.what == "shelf" then
+    elseif object.what == "shelf" then
         if not (object.r == 0 and (isInTable(allVisibleX, allVisibleY, ox, oy-1) and isInTable(allVisibleX, allVisibleY, ox+1, oy-1))
                 or object.r == 1 and (isInTable(allVisibleX, allVisibleY, ox+1, oy) and isInTable(allVisibleX, allVisibleY, ox+1, oy+1))
                 or object.r == 2 and (isInTable(allVisibleX, allVisibleY, ox, oy+1) and isInTable(allVisibleX, allVisibleY, ox-1, oy+1))
                 or object.r == 3 and (isInTable(allVisibleX, allVisibleY, ox-1, oy) and isInTable(allVisibleX, allVisibleY, ox-1, oy-1))) then
-                table.insert(object.errorStr,"A "..object.what.."'s whole front needs to be accessible.")
+                table.insert(object.errorStr,"The shelf's whole front needs to be accessible.")
+            return false
+        end
+    elseif object.what == "couch" then
+        if not (object.r == 0 and (isInTable(allVisibleX, allVisibleY, ox, oy-1) and isInTable(allVisibleX, allVisibleY, ox+1, oy-1))
+                or object.r == 1 and (isInTable(allVisibleX, allVisibleY, ox+1, oy) and isInTable(allVisibleX, allVisibleY, ox+1, oy+1))
+                or object.r == 2 and (isInTable(allVisibleX, allVisibleY, ox, oy+1) and isInTable(allVisibleX, allVisibleY, ox-1, oy+1))
+                or object.r == 3 and (isInTable(allVisibleX, allVisibleY, ox-1, oy) and isInTable(allVisibleX, allVisibleY, ox-1, oy-1))) then
+                table.insert(object.errorStr,"The couch's whole front needs to be accessible.")
             return false
         end
     elseif object.what == "officechair" then
@@ -551,10 +559,11 @@ function allowed(object)
             return false
         end
     elseif object.what == "table" then
+        local ok = false
         what = occupied(ox+1,oy)
         if what then
           if what[1].what == "couch" and what[1].r ~= 1 then
-             ok = true 
+             ok = true
           end
         end
         what = occupied(ox-1,oy)
@@ -580,7 +589,7 @@ function allowed(object)
         end
         return ok
     elseif object.what == "desk" then
-        ok = false
+        local ok = false
         if object.r == 0 then
           what = occupied(ox,oy-1)
           if what then
