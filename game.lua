@@ -582,7 +582,7 @@ function allowed(object)
                 or object.r == 1 and (isInTable(allVisibleX, allVisibleY, ox+1, oy) and noWall(ox,oy,r) and isInTable(allVisibleX, allVisibleY, ox+1, oy+1) and noWall(ox,oy+1,r))
                 or object.r == 2 and (isInTable(allVisibleX, allVisibleY, ox, oy+1) and noWall(ox,oy,r) and isInTable(allVisibleX, allVisibleY, ox-1, oy+1) and noWall(ox-1,oy,r))
                 or object.r == 3 and (isInTable(allVisibleX, allVisibleY, ox-1, oy) and noWall(ox,oy,r) and isInTable(allVisibleX, allVisibleY, ox-1, oy-1) and noWall(ox,oy-1,r))) then
-                table.insert(object.errorStr,"The "..object.what.."'s whole front needs to be accessible.")
+                table.insert(object.errorStr,"The couch's whole front needs to be accessible.")
             return false
         end
     elseif object.what == "shelf" then
@@ -591,7 +591,7 @@ function allowed(object)
                 or object.r == 1 and (isInTable(allVisibleX, allVisibleY, ox+1, oy) and noWall(ox,oy,r) and isInTable(allVisibleX, allVisibleY, ox+1, oy+1) and noWall(ox,oy+1,r))
                 or object.r == 2 and (isInTable(allVisibleX, allVisibleY, ox, oy+1) and noWall(ox,oy,r) and isInTable(allVisibleX, allVisibleY, ox-1, oy+1) and noWall(ox-1,oy,r))
                 or object.r == 3 and (isInTable(allVisibleX, allVisibleY, ox-1, oy) and noWall(ox,oy,r) and isInTable(allVisibleX, allVisibleY, ox-1, oy-1) and noWall(ox,oy-1,r))) then
-                table.insert(object.errorStr,"The "..object.what.."'s whole front needs to be accessible.")
+                table.insert(object.errorStr,"The shelf's whole front needs to be accessible.")
             return false
         end
     elseif object.what == "officechair" then
@@ -628,7 +628,7 @@ function allowed(object)
           end
         end
         if not ok then
-            table.insert(object.errorStr, "Table needs to be in front or next to a couch.")
+            table.insert(object.errorStr, "Couch table needs to be next to a couch.")
         end
         return ok
     elseif object.what == "desk" then
@@ -695,7 +695,7 @@ function allowed(object)
           end
         end
         if not ok then
-            table.insert(object.errorStr, "An officechair needs to be in front of a desk.")
+            table.insert(object.errorStr, "An officechair needs to be in front of the desk.")
         end
         return ok
 
