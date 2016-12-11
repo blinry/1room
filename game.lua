@@ -109,13 +109,11 @@ function drawRoom()
             elseif top == "window" then
                 love.graphics.draw(images.window, tilesize*x, tilesize*y+1, -math.pi/2)
             elseif top == "door_top" then
-                love.graphics.setColor(255, 0, 0)
-                love.graphics.arc("line", tilesize*x, tilesize*y, tilesize, 0, -math.pi/2)
+                love.graphics.draw(images.door, tilesize*x, tilesize*(y-1), 0) 
                 table.insert(room.doorX, x);
                 table.insert(room.doorY, y-1);
             elseif top == "door_bottom" then
-                love.graphics.setColor(255, 0, 0)
-                love.graphics.arc("line", tilesize*x, tilesize*y, tilesize, 0, math.pi/2)
+                love.graphics.draw(images.door, tilesize*(x+1), tilesize*(y+1), math.pi)
                 table.insert(room.doorX, x);
                 table.insert(room.doorY, y);
             end
@@ -127,13 +125,11 @@ function drawRoom()
             elseif left == "window" then
                 love.graphics.draw(images.window, tilesize*x-1, tilesize*y, 0)
             elseif left == "door_right" then
-                love.graphics.setColor(255, 0, 0)
-                love.graphics.arc("line", tilesize*x, tilesize*y, tilesize, 0, math.pi/2)
+                love.graphics.draw(images.door, tilesize*(x+1), tilesize*(y), -3*math.pi/2)
                 table.insert(room.doorX, x);
                 table.insert(room.doorY, y);
             elseif left == "door_left" then
-                love.graphics.setColor(255, 0, 0)
-                love.graphics.arc("line", tilesize*x, tilesize*y, tilesize, math.pi/2, math.pi)
+                love.graphics.draw(images.door, tilesize*(x-1), tilesize*(y+1), -math.pi/2)
                 table.insert(room.doorX, x-1);
                 table.insert(room.doorY, y);
             end
