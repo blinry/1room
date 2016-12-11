@@ -15,3 +15,12 @@
 ---
 5 shelf
 4 couch
+---
+What's going on here?
+A lookout?
+Just couches and shelves?
+Whatever...
+Do not block the coches front.
+Otherwise it would be hard to sit.
+---
+Nice. Let's leave this place.
