@@ -315,7 +315,7 @@ function checkRules()
 
     for i=1,#objects do
         objects[i].errorStr = {}
-        if objects[i].x < 12 then
+        if objects[i].x < 13 then
             objects[i].dirty = not allowed(objects[i])
         else
             solved = false
