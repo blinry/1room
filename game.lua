@@ -491,7 +491,11 @@ function checkRules()
         end
     end
     if solved then
-        room.solved = true
+        if not room.solved then
+            soundtrack:setVolume(0.2)
+            room.solved = true
+            love.audio.play(sounds.win)
+        end
     end
 end
 

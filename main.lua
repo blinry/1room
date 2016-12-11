@@ -42,6 +42,7 @@ function love.keypressed(key)
         if mode == "game" then
             mode = "menu"
             love.audio.play(sounds.back)
+            soundtrack:setVolume(0.5)
         elseif mode == "menu" then
             mode = "title"
             love.audio.play(sounds.back)
