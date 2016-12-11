@@ -205,13 +205,6 @@ function neighborybility(posX, posY)
 
     -- left
     if posX > 1 then
-        local bla = "false"
-        if accessible(posX-1, posY) then bla = "true" end
-        local bla2 = "false"
-        local bla3 = "false"
-        if room.vertical[posX][posY] == "window" then bla2 = "true" end
-        if not (room.vertical[posX][posY] == "window") then bla3 = "true" end
-        --nopeText = "neee "..bla.." "..bla2.." "..bla3..""
         
         if accessible(posX-1, posY) and room.vertical[posX][posY] ~= "window" and room.vertical[posX][posY] ~= "wall" then
             --nopeTest = "WOOT"
