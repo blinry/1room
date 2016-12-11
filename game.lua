@@ -205,13 +205,6 @@ function neighborybility(posX, posY)
 
     -- left
     if posX > 1 then
-        local bla = "false"
-        if accessible(posX-1, posY) then bla = "true" end
-        local bla2 = "false"
-        local bla3 = "false"
-        if room.vertical[posX][posY] == "window" then bla2 = "true" end
-        if not (room.vertical[posX][posY] == "window") then bla3 = "true" end
-        --nopeText = "neee "..bla.." "..bla2.." "..bla3..""
         
         if accessible(posX-1, posY) and room.vertical[posX][posY] ~= "window" and room.vertical[posX][posY] ~= "wall" then
             --nopeTest = "WOOT"
@@ -433,7 +426,7 @@ function allowed(object)
         end
     elseif object.what == "officechair" then
         if not (isInTable(allVisibleX, allVisibleY, ox+1,oy) or isInTable(allVisibleX, allVisibleY, ox-1, oy) or isInTable(allVisibleX, allVisibleY, ox, oy+1)  or isInTable(allVisibleX, allVisibleY, ox,oy-1)) then
-            table.insert("Office chair needs to be accessible.")
+            table.insert(object.errorStr, "Office chair needs to be accessible.")
             return false
         end
     elseif object.what == "table" then
@@ -463,6 +456,69 @@ function allowed(object)
         end
         if not ok then
             table.insert(object.errorStr, "Table needs to be in front or next to a couch.")
+        end
+        return ok
+    elseif object.what == "desk" then
+        ok = false
+        if object.r == 0 then
+          what = occupied(ox,oy-1)
+          if what then
+            if what[1].what == "officechair" then
+             ok = true 
+            end
+          else
+            what = occupied(ox+1, oy-1)
+            if what then
+              if what[1].what == "officechair" then
+                ok = true 
+              end
+            end
+          end
+        elseif object.r == 1 then
+          what = occupied(ox+1,oy)
+          if what then
+            if what[1].what == "officechair" then
+             ok = true 
+            end
+          else
+            what = occupied(ox+1, oy+1)
+            if what then
+              if what[1].what == "officechair" then
+                ok = true 
+              end
+            end
+          end
+        elseif object.r == 2 then
+          what = occupied(ox,oy+1)
+          if what then
+            if what[1].what == "officechair" then
+             ok = true 
+            end
+          else
+            what = occupied(ox-1, oy+1)
+            if what then
+              if what[1].what == "officechair" then
+                ok = true 
+              end
+            end
+          end
+        elseif object.r == 3 then
+          what = occupied(ox-1,oy)
+          if what then
+            if what[1].what == "officechair" then
+             ok = true 
+            end
+          else
+            what = occupied(ox-1, oy-1)
+            if what then
+              if what[1].what == "officechair" then
+                ok = true 
+              end
+            end
+          end
+        end
+        if not ok then
+            table.insert(object.errorStr, "An officechair needs to be in front of a desk.")
         end
         return ok
     elseif object.what == "bed" then
