@@ -64,7 +64,7 @@ function parseRoom(filename)
     end
 
     room.objects = {}
-    local x = 18
+    local x = 13
     local y = 1
     while true do
         local line = f:read()
@@ -76,13 +76,17 @@ function parseRoom(filename)
         amount, what = string.match(line, "([0-9]+) (.+)")
 
         for j = 1, tonumber(amount) do
-            table.insert(room.objects, {what = what, x = x, y = y, r = 2, errorStr = {}, allX = {}, allY = {}, wallHorX = {}, wallHorY = {}, wallVerX = {}, wallVerY = {} })
+            local o = {what = what, x = x, y = y, r = 2, errorStr = {}, allX = {}, allY = {}, wallHorX = {}, wallHorY = {}, wallVerX = {}, wallVerY = {} }
+            if o.what == "bed" then
+                o.r = 1
+            end
+            table.insert(room.objects, o)
         end
 
         y = y+2
         if y > 7 then
             y = 1
-            x = x-4
+            x = x+4
         end
     end
 
@@ -395,7 +399,7 @@ function checkRules()
 
     for i=1,#objects do
         objects[i].errorStr = {}
-        if objects[i].x < 13 then
+        if objects[i].x < 11 then
             objects[i].dirty = not allowed(objects[i])
         else
             solved = false
@@ -444,7 +448,7 @@ function checkRules()
         end
     end
 
-    for x = 1,12 do
+    for x = 1,10 do
         for y = 1,99 do
             what = occupied(x,y)
             if what then
@@ -575,6 +579,7 @@ function allowed(object)
                 or object.r == 2 and (isInTable(allVisibleX, allVisibleY, ox, oy+1) and noWall(ox,oy,r) and isInTable(allVisibleX, allVisibleY, ox-1, oy+1) and noWall(ox-1,oy,r))
                 or object.r == 3 and (isInTable(allVisibleX, allVisibleY, ox-1, oy) and noWall(ox,oy,r) and isInTable(allVisibleX, allVisibleY, ox-1, oy-1) and noWall(ox,oy-1,r))) then
                 table.insert(object.errorStr,"The "..object.what.."'s whole front needs to be accessible.")
+            return false
         end
     elseif object.what == "shelf" then
         local r = object.r
