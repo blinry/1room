@@ -146,6 +146,10 @@ function love.draw()
     love.graphics.scale(scale, scale)
 
     if mode == "game" then
+
+        love.graphics.setColor(50, 50, 50)
+        love.graphics.rectangle("fill", 12*tilesize-4, 2*tilesize-4, 8*tilesize+8, 7*tilesize+8)
+
         if room.solved then
             room.story = {}
             if room.won[1] ~= nil then
@@ -197,6 +201,7 @@ function love.draw()
 
         what = occupied(tx,ty)
 
+        love.graphics.setFont(fonts.m3x6[16])
         if what then
           for i = 1, #what do
             if what[i].errorStr ~= nil then
@@ -206,6 +211,7 @@ function love.draw()
             end
           end
         end
+        love.graphics.setFont(fonts.m5x7[16])
     elseif mode == "title" then
         love.graphics.setColor(255, 255, 255)
         love.graphics.draw(images.title, 0, 0)
