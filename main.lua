@@ -147,7 +147,6 @@ function love.draw()
 
     if mode == "game" then
         if room.solved then
-            love.graphics.setColor(0, 200, 0)
             room.story = {}
             if room.won[1] ~= nil then
 	      love.graphics.setColor(44, 44, 200)
@@ -159,6 +158,7 @@ function love.draw()
               love.graphics.setColor(255, 255, 255)
               love.graphics.print(room.won[1], 116, 8)
             end
+            love.graphics.setColor(0, 200, 0)
         else
             love.graphics.setColor(255, 255, 255)
         end
