@@ -32,80 +32,77 @@ function parseRoom(filename)
         end
     end
 
-    local f = io.open(filename)
+    local f = love.filesystem.newFile(filename)
+    f:open("r")
 
     local horizontal = true
     local lineNr = 1
-    while true do
-        local line = f:read()
-        if line == nil then noObjectList() end
-
-        if line == "---" then
-            break
-        end
-
-        if horizontal then
-            for i = 2, #line, 2 do
-                local c = line:sub(i,i)
-                room.horizontal[i/2][1+(lineNr-1)/2] = legend[c]
-            end
-        else
-            for i = 1, #line, 2 do
-                local c = line:sub(i,i)
-                room.vertical[1+(i-1)/2][lineNr/2] = legend[c]
-            end
-            for i = 2, #line, 2 do
-                local c = line:sub(i,i)
-                room.floor[i/2][lineNr/2] = legend[c]
-            end
-        end
-        horizontal = not horizontal
-        lineNr = lineNr+1
-    end
 
     room.objects = {}
     local x = 13
     local y = 1
-    while true do
-        local line = f:read()
 
-        if line == "---" or line == nil  then
-            break
-        end
+    local phase = 1
 
-        amount, what = string.match(line, "([0-9]+) (.+)")
+    for line in f:lines() do
+        --local line = f:read()
+        --if line == nil then noObjectList() end
 
-        for j = 1, tonumber(amount) do
-            local o = {what = what, x = x, y = y, r = 2, errorStr = {}, allX = {}, allY = {}, wallHorX = {}, wallHorY = {}, wallVerX = {}, wallVerY = {} }
-            if o.what == "bed" then
-                o.r = 1
+        if phase == 1 then
+            if line == "---" then
+                phase = 2
             end
-            table.insert(room.objects, o)
+
+            if horizontal then
+                for i = 2, #line, 2 do
+                    local c = line:sub(i,i)
+                    room.horizontal[i/2][1+(lineNr-1)/2] = legend[c]
+                end
+            else
+                for i = 1, #line, 2 do
+                    local c = line:sub(i,i)
+                    room.vertical[1+(i-1)/2][lineNr/2] = legend[c]
+                end
+                for i = 2, #line, 2 do
+                    local c = line:sub(i,i)
+                    room.floor[i/2][lineNr/2] = legend[c]
+                end
+            end
+            horizontal = not horizontal
+            lineNr = lineNr+1
+        elseif phase == 2 then
+            if line == "---" or line == nil  then
+                phase = 3
+            else
+                amount, what = string.match(line, "([0-9]+) (.+)")
+
+                for j = 1, tonumber(amount) do
+                    local o = {what = what, x = x, y = y, r = 2, errorStr = {}, allX = {}, allY = {}, wallHorX = {}, wallHorY = {}, wallVerX = {}, wallVerY = {} }
+                    if o.what == "bed" then
+                        o.r = 1
+                    end
+                    table.insert(room.objects, o)
+                end
+
+                y = y+2
+                if y > 7 then
+                    y = 1
+                    x = x+4
+                end
+            end
+        elseif phase == 3 then
+           if line == nil or line == "---" then
+               phase = 4
+           else
+               table.insert(room.story, line)
+           end
+        elseif phase == 4 then
+           if line == nil or line == "---" then
+               break
+           else
+               table.insert(room.won, line)
+           end
         end
-
-        y = y+2
-        if y > 7 then
-            y = 1
-            x = x+4
-        end
-    end
-
-    while true do
-      local line = f:read()
-
-       if line == nil or line == "---" then
-         break
-       end
-       table.insert(room.story, line)
-    end
-
-    while true do
-      local line = f:read()
-
-       if line == nil or line == "---" then
-         break
-       end
-       table.insert(room.won, line)
     end
 
     return room
