@@ -51,25 +51,25 @@ function parseRoom(filename)
         if phase == 1 then
             if line == "---" then
                 phase = 2
-            end
-
-            if horizontal then
-                for i = 2, #line, 2 do
-                    local c = line:sub(i,i)
-                    room.horizontal[i/2][1+(lineNr-1)/2] = legend[c]
-                end
             else
-                for i = 1, #line, 2 do
-                    local c = line:sub(i,i)
-                    room.vertical[1+(i-1)/2][lineNr/2] = legend[c]
+                if horizontal then
+                    for i = 2, #line, 2 do
+                        local c = line:sub(i,i)
+                        room.horizontal[i/2][1+(lineNr-1)/2] = legend[c]
+                    end
+                else
+                    for i = 1, #line, 2 do
+                        local c = line:sub(i,i)
+                        room.vertical[1+(i-1)/2][lineNr/2] = legend[c]
+                    end
+                    for i = 2, #line, 2 do
+                        local c = line:sub(i,i)
+                        room.floor[i/2][lineNr/2] = legend[c]
+                    end
                 end
-                for i = 2, #line, 2 do
-                    local c = line:sub(i,i)
-                    room.floor[i/2][lineNr/2] = legend[c]
-                end
+                horizontal = not horizontal
+                lineNr = lineNr+1
             end
-            horizontal = not horizontal
-            lineNr = lineNr+1
         elseif phase == 2 then
             if line == "---" or line == nil  then
                 phase = 3
