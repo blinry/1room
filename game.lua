@@ -488,7 +488,7 @@ function checkRules()
         end
     end
     if solved then
-        if not room.solved then
+        if (not room.solved) and not love.mouse.isDown(1) then
             soundtrack:setVolume(0.2)
             room.solved = true
             love.audio.play(sounds.win)

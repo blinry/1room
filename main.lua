@@ -56,6 +56,12 @@ function love.keypressed(key)
         if mode == "game" then
             loadRoom(1 + (((currentRoom+0)) % #rooms))
         end
+    elseif key == "m" then
+        if soundtrack:getVolume() > 0 then
+            soundtrack:setVolume(0)
+        else
+            soundtrack:setVolume(0.5)
+        end
     end
 end
 
@@ -96,6 +102,7 @@ function love.mousepressed(x, y, button, touch)
         checkRules()
     elseif mode == "title" then
         mode = "menu"
+        love.audio.play(sounds.menu)
     elseif mode == "menu" then
         if button == 1 then
             if menuIndex() then
@@ -153,6 +160,12 @@ function love.draw()
               love.graphics.setColor(255, 255, 255)
               love.graphics.print(room.won[1], 110, 8)
             end
+
+            if currentRoom == 1 then
+                love.graphics.setColor(255, 255, 255)
+                love.graphics.print("Press escape to return to the level selection.", 10, 160)
+            end
+
             love.graphics.setColor(0, 200, 0)
         else
             love.graphics.setColor(255, 255, 255)
@@ -212,7 +225,7 @@ function love.draw()
 
         love.graphics.setColor(50, 50, 50)
         love.graphics.setFont(fonts.m3x6[16])
-        love.graphics.printf("Music: \"Welcome!\" by RoccoW, cc-by-sa 4.0, http://freemusicarchive.org/music/RoccoW/_1035/", 0, 145, 320, "center")
+        love.graphics.printf("Music: \"Welcome!\" by RoccoW, cc-by-sa 4.0. Press m to mute. http://freemusicarchive.org/music/RoccoW/_1035/ ", 0, 145, 320, "center")
         love.graphics.setFont(fonts.m5x7[16])
 
         local x = 16
