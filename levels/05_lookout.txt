@@ -20,7 +20,7 @@ What's going on here?
 A lookout?
 Just couches and shelves?
 Whatever...
-Do not block the coches front.
+Do not block the couch's front.
 Otherwise it would be hard to sit.
 ---
 Nice. Let's leave this place.
