@@ -162,8 +162,21 @@ function love.draw()
             end
 
             if currentRoom == 1 then
-                love.graphics.setColor(255, 255, 255)
+                love.graphics.setColor(91, 110, 225)
                 love.graphics.print("Press escape to return to the level selection.", 10, 160)
+            end
+
+            local allSolved = true
+            for i=1,#rooms do
+                if not rooms[i].solved then
+                    allSolved = false
+                end
+            end
+
+            if allSolved then
+                love.graphics.setColor(215, 123, 186)
+                love.graphics.print("Thanks for playing! <3 Want to design your own levels?", 10, 150)
+                love.graphics.print("They are just text files, check out the source code!", 10, 163)
             end
 
             love.graphics.setColor(0, 200, 0)
