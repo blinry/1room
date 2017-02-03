@@ -57,10 +57,10 @@ function love.keypressed(key)
             loadRoom(1 + (((currentRoom+0)) % #rooms))
         end
     elseif key == "m" then
-        if soundtrack:getVolume() > 0 then
-            soundtrack:setVolume(0)
+        if soundtrack:isPlaying() then
+            soundtrack:pause()
         else
-            soundtrack:setVolume(0.5)
+            soundtrack:resume()
         end
     end
 end
